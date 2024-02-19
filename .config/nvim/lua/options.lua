@@ -1,6 +1,7 @@
 local opt = vim.opt
 
 vim.g.autoformat = true
+vim.g.loaded_netrwPlugin = 1
 
 opt.mouse = "a"
 opt.autowrite = true

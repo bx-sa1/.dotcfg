@@ -17,6 +17,7 @@ return {
     keys = function()
       local fzf_lua = require('fzf-lua')
       return {
+        { "<leader>fc", function() fzf_lua.files({ cwd = "~/.config/nvim/" }) end, remap = true, desc = "Find Config file" },
         { "<leader>ff", function() fzf_lua.files() end, remap = true, desc = "Find File" },
         { "<leader>bb", function() fzf_lua.buffers() end, remap = true, desc = "Find Buffer" },
         { "<leader>t", function() fzf_lua.tabs() end, remap = true, desc = "List tabs" },
