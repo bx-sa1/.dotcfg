@@ -3,6 +3,8 @@ return {
 		"neovim/nvim-lspconfig",
 		version = false,
 		config = function(_, opts)
+      require('lspconfig')["tsserver"].setup{}
+      require('lspconfig')["clangd"].setup{}
 			require('lspconfig')["lua_ls"].setup {
 				on_init = function(client)
 					local path = client.workspace_folders[1].name
