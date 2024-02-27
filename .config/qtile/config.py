@@ -181,7 +181,7 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="Noto Sans Mono Bold",
+    font="NotoSansM Nerd Font Mono Bold",
     fontsize=12,
     padding=8,
     background=colors.bg,
@@ -189,7 +189,8 @@ widget_defaults = dict(
 )
 
 extension_defaults = dict(
-    dmenu_font="Noto Sans Mono Bold",
+    dmenu_ignorecase=True,
+    dmenu_font="NotoSansM Nerd Font Mono Bold",
     dmenu_bottom=True,
     dmenu_lines=5,
     dmenu_prompt=">",
@@ -198,15 +199,12 @@ extension_defaults = dict(
 )
 extension_defaults.update(widget_defaults)
 
-def search():
-    qtile.cmd_spawn(launcher)
-
 def sleep():
     qtile.cmd_spawn("systemctl suspend")
 
 screens = [
     Screen(
-        wallpaper='~/.local/share/wallpapers/eva-1.jpg',
+        wallpaper='~/.local/share/wallpapers/gruvbox_grid.png',
         wallpaper_mode='fill',
         top=bar.Bar(
             [
@@ -224,17 +222,13 @@ screens = [
                 widget.CurrentLayout(
                     fmt='{}',
                 ),
-                widget.TextBox(
-                    fmt='󰍉 Search',
-                    mouse_callbacks={"Button1": search},
-                ),
                 widget.WindowName(
                     format = "{name}",
                     empty_group_string = 'Desktop',
-                    background=colors.a1,
-                    foreground=colors.bg
+                    background=colors.bg,
+                    foreground=colors.fg
                 ),
-                widget.Systray(),
+                widget.Systray(padding=4),
                 widget.Memory(
                     format='{MemUsed: .0f}{mm}',
                     update_interval=5,
@@ -247,7 +241,7 @@ screens = [
                     mouse_callbacks={"Button3": lazy.spawn("pavucontrol")},
                 ),
                 widget.Clock(
-                    fmt=" {}",
+                    fmt="󱑂 {}",
                     format='%I:%M %p',
                 ),
             ],
