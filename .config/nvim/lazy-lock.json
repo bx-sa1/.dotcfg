@@ -1,7 +1,10 @@
 {
+  "awesome-vim-colorschemes": { "branch": "master", "commit": "4b2787b8894c4a70c42d15c2808d7cf278cb6abb" },
+  "candle-grey": { "branch": "master", "commit": "660f7a7eb650e8ffb73f167d9a7d9bc5da9d74a8" },
   "carbonized": { "branch": "master", "commit": "5425563ca401253413578e80010ee91889436c2c" },
+  "fzf-lua": { "branch": "main", "commit": "3b3cc17c7bb91f6bbef7166c0756f89a189c4db4" },
   "lazy.nvim": { "branch": "main", "commit": "aedcd79811d491b60d0a6577a9c1701063c2a609" },
-  "nvim-lspconfig": { "branch": "master", "commit": "c656fe5a58b9eae474f61d294648a897d53639cc" },
+  "nvim-lspconfig": { "branch": "master", "commit": "d5b6d4366dfd7a1071b930defd365e6d0be258de" },
   "vim-deus": { "branch": "master", "commit": "1be965e7bc1c01e7db5e46dcd0e50d32d4eef434" },
   "which-key.nvim": { "branch": "main", "commit": "4433e5ec9a507e5097571ed55c02ea9658fb268a" }
 }

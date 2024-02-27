@@ -27,10 +27,13 @@
 import subprocess
 import os
 
-from libqtile import bar, layout, widget, hook, qtile
+from libqtile import bar, layout, widget, hook, qtile, extension
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+from libqtile.log_utils import logger
+
+import colors
 
 mod = "mod4"
 terminal = guess_terminal()
@@ -43,33 +46,35 @@ def xdg_autostart():
 
 @hook.subscribe.startup_once
 def core_autostart():
-    subprocess.Popen(['/usr/bin/dunst'])
-    subprocess.Popen(['/usr/bin/xsettingsd'])
-    subprocess.Popen(['/usr/bin/picom'])
-    subprocess.Popen(['/usr/bin/xss-lock', 
-                      '-n', 
-                      '/usr/share/doc/xss-lock/dim-screen.sh', 
-                      '--', 
-                      os.path.expanduser('~/.local/bin/xsecurelock-env.sh')])
+    subprocess.Popen([os.path.expanduser('~/.config/qtile/autostart-x11.sh')])
 
 @lazy.function
 def show_key_binds(qtile):
     key_binds = ["{}+{} - {}".format(('+'.join(k.modifiers)), k.key, k.desc) for k in keys]
-    key_binds_pipe = subprocess.Popen(["echo", "{}".format('\n'.join(key_binds))], stdout=subprocess.PIPE, text=True)
-    rofi = subprocess.Popen(["/usr/bin/rofi", "-dmenu"], stdin=key_binds_pipe.stdout)
-    rofi.communicate()
+    dmenu = extension.Dmenu()
+    dmenu._configure(qtile)
+    dmenu.run(key_binds)
+
+@lazy.function
+def show_stuck_windows(qtile):
+    global sticky_win_list
+    dmenu = extension.Dmenu()
+    dmenu._configure(qtile)
+    wname = dmenu.run([w.info()["name"] for w in sticky_win_list])
 
 def stick_win(qtile):
-    global win_list
-    sticky_win_list.append(qtile.current_window)
+    global sticky_win_list
+    if qtile.current_window not in sticky_win_list:
+        sticky_win_list.append(qtile.current_window)
 
 def unstick_win(qtile):
-    global win_list
-    if qtile.current_window in win_list:
+    global sticky_win_list
+    if qtile.current_window in sticky_win_list:
         sticky_win_list.remove(qtile.current_window)
 
 @hook.subscribe.setgroup
 def move_win():
+    global sticky_win_list
     for w in sticky_win_list:
         w.togroup(qtile.current_group.name)
 
@@ -118,12 +123,14 @@ keys = [
     Key([mod], "t", lazy.window.toggle_floating(), desc="Toggle floating on the focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Spawn a command using a prompt widget"),
+    Key([mod], "r", lazy.run_extension(extension.J4DmenuDesktop()), desc="Run a desktop file"),
+    Key([mod, "shift"], "r", lazy.run_extension(extension.DmenuRun()), desc="Run a desktop file"),
 
     Key([mod], "e", lazy.spawn("xdg-open " + os.path.expanduser('~')), desc="Launch file manager"),
     Key([mod, "shift"], "slash", show_key_binds, desc="Show Keybinds"),
     Key([mod], "o", lazy.function(stick_win), desc="Stick Window"),
     Key([mod, "shift"], "o", lazy.function(unstick_win), desc="Unstick Window"),
+    Key([mod, "control"], "o", show_stuck_windows, desc="Show stuck windows")
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -153,7 +160,12 @@ for i in groups:
     )
 
 layouts = [
-    layout.Columns(margin=10, border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=2),
+    layout.Columns(
+        margin=10, 
+        border_focus=colors.a1, 
+        border_normal=colors.a2,
+        border_width=2
+    ),
     layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
@@ -169,126 +181,74 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="sans",
+    font="Noto Sans Mono Bold",
     fontsize=12,
     padding=8,
+    background=colors.bg,
+    foreground=colors.fg
 )
-extension_defaults = [ widget_defaults.copy()]
+
+extension_defaults = dict(
+    dmenu_font="Noto Sans Mono Bold",
+    dmenu_bottom=True,
+    dmenu_lines=5,
+    dmenu_prompt=">",
+    selected_background=colors.a1,
+    selected_foreground=colors.bg,
+)
+extension_defaults.update(widget_defaults)
 
 def search():
-    qtile.cmd_spawn("rofi -show drun")
+    qtile.cmd_spawn(launcher)
 
 def sleep():
     qtile.cmd_spawn("systemctl suspend")
 
 screens = [
     Screen(
-        wallpaper='~/Pictures/120_-_KnFPX73.jpg',
+        wallpaper='~/.local/share/wallpapers/eva-1.jpg',
         wallpaper_mode='fill',
         top=bar.Bar(
             [
                 widget.TextBox(
                     fmt='󰤄 Sleep',
-                    background='#282738',
-                    font="JetBrains Mono Bold",
-                    fontsize=13,
-                    foreground='#E5B9C6',
                     mouse_callbacks={"Button1": sleep},
                 ),
-
                 widget.GroupBox(
-                    padding=3,
-                    #fontsize=24,
-                    #borderwidth=3,
-                    highlight_method='block',
-                    active='#E5B9C6',
-                    block_highlight_text_color="#CFB3E5",
-                    highlight_color='#4B427E',
-                    inactive='#282738',
-                    foreground='#4B427E',
-                    background='#353446',
-                    this_current_screen_border='#353446',
-                    this_screen_border='#353446',
-                    other_current_screen_border='#353446',
-                    other_screen_border='#353446',
-                    urgent_border='#353446',
-                    rounded=True,
-                    disable_drag=True,
+                    rounded=False,
+                    highlight_method="block",
+                    this_current_screen_border=colors.a1,
+                    block_highlight_text_color=colors.bg,
+                    padding=4
                 ),
-
                 widget.CurrentLayout(
-                    background='#353446',
-                    foreground='#E5B9C6',
                     fmt='{}',
-                    font="JetBrains Mono Bold",
-                    fontsize=13,
                 ),
-
                 widget.TextBox(
                     fmt='󰍉 Search',
-                    background='#282738',
-                    font="JetBrains Mono Bold",
-                    fontsize=13,
-                    foreground='#E5B9C6',
                     mouse_callbacks={"Button1": search},
                 ),
-
                 widget.WindowName(
-                    background = '#353446',
                     format = "{name}",
-                    font="JetBrains Mono Bold",
-                    fontsize=13,
-                    foreground='#E5B9C6',
                     empty_group_string = 'Desktop',
-
+                    background=colors.a1,
+                    foreground=colors.bg
                 ),
-
-                widget.Systray(
-                    background='#282738',
-                    fontsize=2,
-                ),
-
+                widget.Systray(),
                 widget.Memory(
-                    background='#353446',
-                    format=' {MemUsed: .0f}{mm}',
-                    foreground='#E5B9C6',
-                    font="JetBrains Mono Bold",
-                    fontsize=13,
+                    format='{MemUsed: .0f}{mm}',
                     update_interval=5,
                 ),
-
                 widget.Mpris2(
-                    font="JetBrains Mono Bold",
-                    fontsize=13,
-                    background='#353446',
-                    foreground='#E5B9C6',
                     max_chars=20,
                 ),
-
                 widget.Volume(
-                    font="JetBrains Mono Bold",
-                    fontsize=13,
-                    emoji=True,
-                    emoji_list=['󰖁', '󰕿', '󰖀', '󰕾'],
-                    background='#353446',
-                    padding=0,
+                    fmt="󰕾 {}",
                     mouse_callbacks={"Button3": lazy.spawn("pavucontrol")},
                 ),
-
-                widget.Volume(
-                    font="JetBrains Mono Bold",
-                    fontsize=13,
-                    background='#353446',
-                    foreground='#E5B9C6',
-                    mouse_callbacks={"Button3": lazy.spawn("pavucontrol")},
-                ),
-
                 widget.Clock(
-                    format=' %I:%M %p',
-                    background='#282738',
-                    foreground='#E5B9C6',
-                    font="JetBrains Mono Bold",
-                    fontsize=13,
+                    fmt=" {}",
+                    format='%I:%M %p',
                 ),
             ],
             30,
@@ -317,6 +277,8 @@ bring_front_click = False
 floats_kept_above = True
 cursor_warp = False
 floating_layout = layout.Floating(
+    border_focus=colors.a1,
+    border_normal=colors.a2,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
@@ -334,7 +296,7 @@ reconfigure_screens = True
 
 # If things like steam games want to auto-minimize themselves when losing
 # focus, should we respect this or not?
-auto_minimize = True
+auto_minimize = False
 
 # When using the Wayland backend, this can be used to configure input devices.
 wl_input_rules = None

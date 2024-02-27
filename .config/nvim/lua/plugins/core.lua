@@ -25,12 +25,7 @@ return {
         { "<leader>cg", function() fzf_lua.grep() end, remap = true, desc = "Grep Buffer" },
         { "<leader>cs", function() fzf_lua.git_status() end, remap = true, desc = "Show Current buffers Git Status" },
         { "<leader>cm", function() fzf_lua.man_pages() end, remap = true, desc = "Show Manpage" },
-        { "<leader>clr", function() fzf_lua.lsp_references() end, remap = true, desc = "Show LSP References" },
-        { "<leader>cla", function() fzf_lua.lsp_code_actions() end, remap = true, desc = "Show LSP Code Actions" },
-        { "<leader>clf", function() fzf_lua.lsp_definitions() end, remap = true, desc = "Show LSP Definitions" },
-        { "<leader>clc", function() fzf_lua.lsp_declarations() end, remap = true, desc = "Show LSP Declarations" },
-        { "<leader>clt", function() fzf_lua.lsp_typedefs() end, remap = true, desc = "Show LSP Typedefs" },
-        { "<leader>cli", function() fzf_lua.lsp_implementations() end, remap = true, desc = "Show LSP Implementations" },
+        { "<leader>C", function() fzf_lua.colorschemes() end, remap = true, desc = "Show colorschemes" }
       }
     end
   }
