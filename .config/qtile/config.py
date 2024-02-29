@@ -127,7 +127,15 @@ keys = [
     Key([mod, "shift"], "slash", show_key_binds, desc="Show Keybinds"),
     Key([mod], "o", lazy.function(stick_win), desc="Stick Window"),
     Key([mod, "shift"], "o", lazy.function(unstick_win), desc="Unstick Window"),
-    Key([mod, "control"], "o", show_stuck_windows, desc="Show stuck windows")
+    Key([mod, "control"], "o", show_stuck_windows, desc="Show stuck windows"),
+
+    Key([], "XF86AudioLowerVolume", lazy.spawn("amixer sset Master 5%-"), desc="Lower Volume by 5%"),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer sset Master 5%+"), desc="Raise Volume by 5%"),
+    Key([], "XF86AudioMute", lazy.spawn("amixer sset Master 1+ toggle"), desc="Mute/Unmute Volume"), 
+
+    Key([], "XF86AudioPlay", lazy.spawn("playerctl play-pause"), desc="Play/Pause player"),
+    Key([], "XF86AudioNext", lazy.spawn("playerctl next"), desc="Skip to next"),
+    Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), desc="Skip to previous"),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -179,8 +187,8 @@ layouts = [
 
 widget_defaults = dict(
     font="NotoSansM Nerd Font Mono Bold",
-    fontsize=12,
-    padding=8,
+    fontsize=9,
+    padding=4,
     background=colors.bg,
     foreground=colors.fg
 )
@@ -188,6 +196,7 @@ widget_defaults = dict(
 extension_defaults = dict(
     dmenu_ignorecase=True,
     dmenu_font="NotoSansM Nerd Font Mono Bold",
+    dmenu_fontsize=9,
     dmenu_bottom=True,
     dmenu_lines=5,
     dmenu_prompt=">",
@@ -206,7 +215,7 @@ screens = [
         top=bar.Bar(
             [
                 widget.TextBox(
-                    fmt='󰤄 Sleep',
+                    fmt='Sleep',
                     mouse_callbacks={"Button1": sleep},
                 ),
                 widget.GroupBox(
@@ -225,24 +234,30 @@ screens = [
                     background=colors.bg,
                     foreground=colors.fg
                 ),
-                widget.Systray(padding=4),
+                widget.Systray(),
+                widget.CPU(
+                    format="CPU:{load_percent}%"
+                ),
                 widget.Memory(
-                    format='{MemUsed: .0f}{mm}',
+                    format='MEM:{MemUsed:.0f}{mm}',
                     update_interval=5,
                 ),
                 widget.Mpris2(
                     max_chars=20,
                 ),
                 widget.Volume(
-                    fmt="󰕾 {}",
+                    fmt="VOL:{}",
                     mouse_callbacks={"Button3": lazy.spawn("pavucontrol")},
                 ),
+                widget.Battery(
+                    format="BATT:{percent:2.0%}"
+                ),
                 widget.Clock(
-                    fmt="󱑂 {}",
+                    fmt="{}",
                     format='%I:%M %p',
                 ),
             ],
-            30,
+            25,
             # border_color = '#282738',
             # border_width = [0,0,0,0],
             # margin = [15,60,6,60],

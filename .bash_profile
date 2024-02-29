@@ -12,7 +12,6 @@ export XMODIFIERS=@im=fcitx
 export SDL_IM_MODULE=fcitx
 
 export QT_QPA_PLATFORMTHEME=qt5ct
-#export QT_STYLE_OVERRIDE=kvantum
 
 export SYNCPKG_REPOS="https://aur.archlinux.org"
 export PATH="$PATH:/home/baba/.local/bin:/home/baba/.config/emacs/bin:/home/baba/.cargo/bin"
