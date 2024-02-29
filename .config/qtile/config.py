@@ -41,12 +41,9 @@ terminal = guess_terminal()
 sticky_win_list = []
 
 @hook.subscribe.startup_once
-def xdg_autostart():
-    subprocess.Popen(['/usr/bin/dex', '-a'])
-
-@hook.subscribe.startup_once
-def core_autostart():
+def autostart():
     subprocess.Popen([os.path.expanduser('~/.config/qtile/autostart-x11.sh')])
+    subprocess.Popen(['/usr/bin/dex', '-a'])
 
 @lazy.function
 def show_key_binds(qtile):
