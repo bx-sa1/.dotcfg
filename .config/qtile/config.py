@@ -46,6 +46,22 @@ def autostart():
     subprocess.Popen(['/usr/bin/dex', '-a'])
 
 @lazy.function
+def power_menu(qtile):
+    dmenu = extension.Dmenu()
+    dmenu._configure(qtile)
+    res = dmenu.run(["Shutdown", "Restart", "Sleep", "Hibernate", "Quit"])
+    if res == "Shutdown":
+        subprocess.Popen(["/usr/bin/systemctl", "shutdown"])
+    elif res == "Restart":
+        subprocess.Popen(["/usr/bin/systemctl", "reboot"])
+    elif res == "Sleep":
+        subprocess.Popen(["/usr/bin/systemctl", "sleep"])
+    elif res == "Hibernate":
+        subprocess.Popen(["/usr/bin/systemctl", "hibernate"])
+    elif res == "Quit":
+        qtile.shutdown()
+
+@lazy.function
 def show_key_binds(qtile):
     key_binds = ["{}+{} - {}".format(('+'.join(k.modifiers)), k.key, k.desc) for k in keys]
     dmenu = extension.Dmenu()
@@ -119,7 +135,7 @@ keys = [
     ),
     Key([mod], "t", lazy.window.toggle_floating(), desc="Toggle floating on the focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
-    Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
+    Key([mod, "control"], "q", power_menu, desc="Shutdown Qtile"),
     Key([mod], "r", lazy.run_extension(extension.J4DmenuDesktop()), desc="Run a desktop file"),
     Key([mod, "shift"], "r", lazy.run_extension(extension.DmenuRun()), desc="Run a desktop file"),
 
@@ -205,9 +221,6 @@ extension_defaults = dict(
 )
 extension_defaults.update(widget_defaults)
 
-def sleep():
-    qtile.cmd_spawn("systemctl suspend")
-
 screens = [
     Screen(
         wallpaper='~/.local/share/wallpapers/gruvbox_grid.png',
@@ -215,8 +228,9 @@ screens = [
         top=bar.Bar(
             [
                 widget.TextBox(
-                    fmt='Sleep',
-                    mouse_callbacks={"Button1": sleep},
+                    fmt='',
+                    fontsize=32,
+                    mouse_callbacks={"Button1": power_menu},
                 ),
                 widget.GroupBox(
                     rounded=False,
@@ -251,7 +265,7 @@ screens = [
                 ),
                 widget.Battery(
                     format="BATT:{percent:2.0%}"
-                ),
+                ) if os.environ.get("DEVICE_TYPE", "DESKTOP") == "LAPTOP" else widget.Spacer(length=0),
                 widget.Clock(
                     fmt="{}",
                     format='%I:%M %p',
