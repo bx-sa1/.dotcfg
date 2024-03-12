@@ -49,16 +49,25 @@ def autostart():
 def power_menu(qtile):
     dmenu = extension.Dmenu()
     dmenu._configure(qtile)
-    res = dmenu.run(["Shutdown", "Restart", "Sleep", "Hibernate", "Quit"])
-    if res == "Shutdown":
-        subprocess.Popen(["/usr/bin/systemctl", "shutdown"])
-    elif res == "Restart":
-        subprocess.Popen(["/usr/bin/systemctl", "reboot"])
-    elif res == "Sleep":
-        subprocess.Popen(["/usr/bin/systemctl", "sleep"])
-    elif res == "Hibernate":
-        subprocess.Popen(["/usr/bin/systemctl", "hibernate"])
-    elif res == "Quit":
+    out = dmenu.run(["Shutdown", "Restart", "Sleep", "Hibernate", "Quit"])
+
+    try:
+        sout = out.rstrip("\n")
+    except AttributeError:
+        # out is not a string (for example it's a Popen object returned
+        # by super(WindowList, self).run() when there are no menu items to
+        # list
+        return
+
+    if sout == "Shutdown":
+        qtile.spawn("systemctl shutdown")
+    elif sout == "Restart":
+        qtile.spawn("systemctl reboot")
+    elif sout == "Sleep":
+        qtile.spawn("systemctl suspend")
+    elif sout == "Hibernate":
+        qtile.spawn("systemctl hibernate")
+    elif sout == "Quit":
         qtile.shutdown()
 
 @lazy.function
