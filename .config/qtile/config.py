@@ -28,7 +28,7 @@ import subprocess
 import os
 
 from libqtile import bar, layout, widget, hook, qtile, extension
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, Match, Screen, ScratchPad, DropDown
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile.log_utils import logger
@@ -38,7 +38,35 @@ import colors
 mod = "mod4"
 terminal = guess_terminal()
 
+@lazy.function
+def show_minimised_windows(qtile):
+    global minimised_win_list
+    dmenu = extension.Dmenu()
+    dmenu._configure(qtile)
+    out = dmenu.run([w.info()["wm_class"][0] + ": " + w.info()["name"] for w in minimised_win_list])
+
+    try:
+        sout = out.rstrip("\n")
+    except AttributeError:
+        # out is not a string (for example it's a Popen object returned
+        # by super(WindowList, self).run() when there are no menu items to
+        # list
+        return
+
+    w = sout.split(": ")
+    for win in minimised_win_list:
+        if win.info()["wm_class"][0] == w[0] and win.info()["name"] == w[1]:
+            win.toggle_minimize()
+            minimised_win_list.remove(win)
+            minimised_win_widget.force_update()
+
 sticky_win_list = []
+minimised_win_list = []
+minimised_win_widget = widget.GenPollText(
+    func = lambda : str(len(minimised_win_list)),
+    mouse_callbacks={"Button1": show_minimised_windows},
+    update_interval=None
+)
 
 @hook.subscribe.startup_once
 def autostart():
@@ -100,6 +128,22 @@ def move_win():
     for w in sticky_win_list:
         w.togroup(qtile.current_group.name)
 
+def minimise_win(qtile):
+    global minimised_win_list
+    minimised = qtile.current_window.info()["minimized"]
+    if qtile.current_window not in minimised_win_list and not minimised:
+            qtile.current_window.toggle_minimize()
+            minimised_win_list.append(qtile.current_window)
+            minimised_win_widget.force_update()
+
+def unminimise_win(qtile):
+    global minimised_win_list
+    minimised = qtile.current_window.info()["minimized"]
+    if qtile.current_window in minimised_win_list and minimised:
+        qtile.current_window.toggle_minimize()
+        minimised_win_list.remove(qtile.current_window)
+        minimised_win_widget.force_update()
+
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
@@ -153,6 +197,9 @@ keys = [
     Key([mod], "o", lazy.function(stick_win), desc="Stick Window"),
     Key([mod, "shift"], "o", lazy.function(unstick_win), desc="Unstick Window"),
     Key([mod, "control"], "o", show_stuck_windows, desc="Show stuck windows"),
+    Key([mod], "m", lazy.function(minimise_win), desc="Minimise Window"),
+    Key([mod, "shift"], "m", lazy.function(unminimise_win), desc="Unminimise Window"),
+    Key([mod, "control"], "m", show_minimised_windows, desc="Show minimised windows"),
 
     Key([], "XF86AudioLowerVolume", lazy.spawn("amixer sset Master 5%-"), desc="Lower Volume by 5%"),
     Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer sset Master 5%+"), desc="Raise Volume by 5%"),
@@ -161,9 +208,12 @@ keys = [
     Key([], "XF86AudioPlay", lazy.spawn("playerctl play-pause"), desc="Play/Pause player"),
     Key([], "XF86AudioNext", lazy.spawn("playerctl next"), desc="Skip to next"),
     Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), desc="Skip to previous"),
+
+    
 ]
 
 groups = [Group(i) for i in "123456789"]
+
 
 for i in groups:
     keys.extend(
@@ -188,6 +238,25 @@ for i in groups:
             #     desc="move focused window to group {}".format(i.name)),
         ]
     )
+
+groups.extend([
+    ScratchPad("scratchpad", [
+        # define a drop down terminal.
+        # it is placed in the upper third of screen by default.
+        DropDown("term", terminal, opacity=0.8),
+
+        # define another terminal exclusively for ``qtile shell` at different position
+        DropDown("spotify", "spotify-launcher",
+                    x=0.05, y=0.4, width=0.9, height=0.6, opacity=0.9,
+                    on_focus_lost_hide=True) 
+    ])
+])
+
+# toggle visibiliy of above defined DropDown named "term"
+keys.extend([
+    Key([mod], "minus", lazy.group['scratchpad'].dropdown_toggle('term')),
+    Key([mod], "equal", lazy.group['scratchpad'].dropdown_toggle('spotify')),
+])
 
 layouts = [
     layout.Columns(
@@ -257,6 +326,7 @@ screens = [
                     background=colors.bg,
                     foreground=colors.fg
                 ),
+                minimised_win_widget,
                 widget.Systray(),
                 widget.CPU(
                     format="CPU:{load_percent}%"
@@ -317,6 +387,8 @@ floating_layout = layout.Floating(
         Match(wm_class="ssh-askpass"),  # ssh-askpass
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
+        Match(wm_class="lutris"),
+        Match(wm_class="pcmanfm"),
     ]
 )
 auto_fullscreen = True

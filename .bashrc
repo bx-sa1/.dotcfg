@@ -9,8 +9,12 @@ alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias rip_sample='yt-dlp -x -P ~/Music/prod/SAMPLES/my-samples'
 alias dotcfg="git --git-dir=$HOME/.dotcfg/ --work-tree=$HOME"
+alias qtilecfg="nvim ~/.config/qtile/config.py"
 
 source /usr/share/bash-completion/completions/git
 __git_complete dotcfg __git_main
 
 PS1='[\u@\h \W]\$ '
+
+[ -f "/home/baba/.ghcup/env" ] && . "/home/baba/.ghcup/env" # ghcup-env
+export PATH=$PATH:/home/baba/.spicetify

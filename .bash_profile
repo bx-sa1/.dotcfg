@@ -21,3 +21,5 @@ export QSYS_ROOTDIR="/home/baba/.local/bin/intelFPGA_lite/22.1std/quartus/sopc_b
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
 	exec startx &>/dev/null
 fi
+
+export PATH=$PATH:/home/baba/.spicetify

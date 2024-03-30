@@ -49,24 +49,27 @@ return {
 
           -- Buffer local mappings.
           -- See `:help vim.lsp.*` for documentation on any of the below functions
-          local opts = { buffer = ev.buf }
-          vim.keymap.set('n', '<localleader>gD', vim.lsp.buf.declaration, opts)
-          vim.keymap.set('n', '<localleader>gd', vim.lsp.buf.definition, opts)
-          vim.keymap.set('n', '<localleader>K', vim.lsp.buf.hover, opts)
-          vim.keymap.set('n', '<localleader>gi', vim.lsp.buf.implementation, opts)
-          vim.keymap.set('n', '<localleader><C-k>', vim.lsp.buf.signature_help, opts)
-          vim.keymap.set('n', '<localleader><space>wa', vim.lsp.buf.add_workspace_folder, opts)
-          vim.keymap.set('n', '<localleader><space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+          local opts = function (d)
+            return { buffer = ev.buf, desc = d }
+          end
+
+          vim.keymap.set('n', '<localleader>gD', vim.lsp.buf.declaration, opts("Find Declarations"))
+          vim.keymap.set('n', '<localleader>gd', vim.lsp.buf.definition, opts("Find Definitions"))
+          vim.keymap.set('n', '<localleader>K', vim.lsp.buf.hover, opts("Hover"))
+          vim.keymap.set('n', '<localleader>gi', vim.lsp.buf.implementation, opts("Find Implementation"))
+          vim.keymap.set('n', '<localleader><C-k>', vim.lsp.buf.signature_help, opts("Signature Help"))
+          vim.keymap.set('n', '<localleader><space>wa', vim.lsp.buf.add_workspace_folder, opts("Add Workspace Folder"))
+          vim.keymap.set('n', '<localleader><space>wr', vim.lsp.buf.remove_workspace_folder, opts("Remove Workspace Folder"))
           vim.keymap.set('n', '<localleader><space>wl', function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-          end, opts)
-          vim.keymap.set('n', '<localleader><space>D', vim.lsp.buf.type_definition, opts)
-          vim.keymap.set('n', '<localleader><space>rn', vim.lsp.buf.rename, opts)
-          vim.keymap.set({ 'n', 'v' }, '<localleader><space>ca', vim.lsp.buf.code_action, opts)
-          vim.keymap.set('n', '<localleader>gr', vim.lsp.buf.references, opts)
+          end, opts("List Workspace Folders"))
+          vim.keymap.set('n', '<localleader><space>D', vim.lsp.buf.type_definition, opts("Find Type Definitions"))
+          vim.keymap.set('n', '<localleader><space>rn', vim.lsp.buf.rename, opts("Rename"))
+          vim.keymap.set({ 'n', 'v' }, '<localleader><space>ca', vim.lsp.buf.code_action, opts("Code Action"))
+          vim.keymap.set('n', '<localleader>gr', vim.lsp.buf.references, opts("Find References"))
           vim.keymap.set('n', '<localleader><space>f', function()
             vim.lsp.buf.format { async = true }
-          end, opts)
+          end, opts("Format"))
         end,
       })
 		end
