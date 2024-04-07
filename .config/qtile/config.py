@@ -247,8 +247,7 @@ groups.extend([
 
         # define another terminal exclusively for ``qtile shell` at different position
         DropDown("spotify", "spotify-launcher",
-                    x=0.05, y=0.4, width=0.9, height=0.6, opacity=0.9,
-                    on_focus_lost_hide=True) 
+                    x=0.05, y=0.4, width=0.9, height=0.6, opacity=0.8) 
     ])
 ])
 
@@ -299,67 +298,73 @@ extension_defaults = dict(
 )
 extension_defaults.update(widget_defaults)
 
-screens = [
-    Screen(
-        wallpaper='~/.local/share/wallpapers/gruvbox_grid.png',
-        wallpaper_mode='fill',
-        top=bar.Bar(
-            [
-                widget.TextBox(
-                    fmt='',
-                    fontsize=32,
-                    mouse_callbacks={"Button1": power_menu},
-                ),
-                widget.GroupBox(
-                    rounded=False,
-                    highlight_method="block",
-                    this_current_screen_border=colors.a1,
-                    block_highlight_text_color=colors.bg,
-                    padding=4
-                ),
-                widget.CurrentLayout(
-                    fmt='{}',
-                ),
-                widget.WindowName(
-                    format = "{name}",
-                    empty_group_string = 'Desktop',
-                    background=colors.bg,
-                    foreground=colors.fg
-                ),
-                minimised_win_widget,
-                widget.Systray(),
-                widget.CPU(
-                    format="CPU:{load_percent}%"
-                ),
-                widget.Memory(
-                    format='MEM:{MemUsed:.0f}{mm}',
-                    update_interval=5,
-                ),
-                widget.Mpris2(
-                    max_chars=20,
-                ),
-                widget.Volume(
-                    fmt="VOL:{}",
-                    mouse_callbacks={"Button3": lazy.spawn("pavucontrol")},
-                ),
-                widget.Battery(
-                    format="BATT:{percent:2.0%}"
-                ) if os.environ.get("DEVICE_TYPE", "DESKTOP") == "LAPTOP" else widget.Spacer(length=0),
-                widget.Clock(
-                    fmt="{}",
-                    format='%I:%M %p',
-                ),
-            ],
-            25,
-            # border_color = '#282738',
-            # border_width = [0,0,0,0],
-            # margin = [15,60,6,60],
-        ),
-        # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
-        # By default we handle these events delayed to already improve performance, however your system might still be struggling
-        # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
-        # x11_drag_polling_rate = 60,
-    ),
+default_screen = Screen(
+    wallpaper='~/.local/share/wallpapers/gruvbox_grid.png',
+    wallpaper_mode='fill',
+    top=bar.Bar(
+        [
+            widget.TextBox(
+                fmt='',
+                fontsize=32,
+                mouse_callbacks={"Button1": power_menu},
+            ),
+            widget.GroupBox(
+                rounded=False,
+                highlight_method="block",
+                this_current_screen_border=colors.a1,
+                block_highlight_text_color=colors.bg,
+                padding=4
+            ),
+            widget.CurrentLayout(
+                fmt='{}',
+            ),
+            widget.WindowName(
+                format = "{name}",
+                empty_group_string = 'Desktop',
+                background=colors.bg,
+                foreground=colors.fg
+            ),
+            minimised_win_widget,
+            widget.Systray(),
+            widget.CPU(
+                format="CPU:{load_percent}%"
+            ),
+            widget.Memory(
+                format='MEM:{MemUsed:.0f}{mm}',
+                update_interval=5,
+            ),
+            widget.Mpris2(
+                max_chars=20,
+            ),
+            widget.PulseVolume(
+                fmt="VOL:{}",
+                volume_app="pavucontrol"
+            ),
+            widget.Battery(
+                format="BATT:{percent:2.0%}"
+            ) if os.environ.get("DEVICE_TYPE", "DESKTOP") == "LAPTOP" else widget.Spacer(length=0),
+            widget.Clock(
+                fmt="{}",
+                format='%I:%M %p',
+            ),
+        ],
+        25,
+        # border_color = '#282738',
+        # border_width = [0,0,0,0],
+        # margin = [15,60,6,60],
+    )   
+)
+
+def make_screen(x, y, w, h, s):
+    screen = s
+    screen.x = x
+    screen.y = y
+    screen.width = w
+    screen.height = h
+    return screen
+
+fake_screens = [
+    make_screen(0,0,1920,1080,default_screen),
 ]
 
 # Drag floating layouts.
@@ -389,6 +394,7 @@ floating_layout = layout.Floating(
         Match(title="pinentry"),  # GPG key password entry
         Match(wm_class="lutris"),
         Match(wm_class="pcmanfm"),
+        Match(wm_class="pavucontrol"),
     ]
 )
 auto_fullscreen = True
