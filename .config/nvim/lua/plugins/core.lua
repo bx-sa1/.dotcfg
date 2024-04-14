@@ -94,5 +94,38 @@ return {
   {
     "nvim-tree/nvim-web-devicons",
     lazy = true
+  },
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    config = true
+    -- use opts = {} for passing setup options
+    -- this is equalent to setup({}) function
+  },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {
+    indent = {
+      char = "│",
+      tab_char = "│",
+    },
+    scope = { enabled = false },
+    exclude = {
+      filetypes = {
+        "help",
+        "alpha",
+        "dashboard",
+        "neo-tree",
+        "Trouble",
+        "trouble",
+        "lazy",
+        "mason",
+        "notify",
+        "toggleterm",
+        "lazyterm",
+      },
+    },
+  },
   }
 }

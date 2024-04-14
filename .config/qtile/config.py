@@ -345,7 +345,7 @@ default_screen = Screen(
             ) if os.environ.get("DEVICE_TYPE", "DESKTOP") == "LAPTOP" else widget.Spacer(length=0),
             widget.Clock(
                 fmt="{}",
-                format='%I:%M %p',
+                format='%a %d/%m/%y %H:%M',
             ),
         ],
         25,
