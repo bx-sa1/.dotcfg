@@ -355,16 +355,8 @@ default_screen = Screen(
     )   
 )
 
-def make_screen(x, y, w, h, s):
-    screen = s
-    screen.x = x
-    screen.y = y
-    screen.width = w
-    screen.height = h
-    return screen
-
-fake_screens = [
-    make_screen(0,0,1920,1080,default_screen),
+screens = [
+    default_screen
 ]
 
 # Drag floating layouts.
