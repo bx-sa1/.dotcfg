@@ -15,4 +15,5 @@ xss-lock ~/.local/bin/xsecurelock-env.sh &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 nitrogen --restore &
 dex -a &
+pcmanfm -d &
 exec bspwm 
