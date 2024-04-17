@@ -1,0 +1,29 @@
+#!/bin/sh
+
+xsetroot -cursor_name left_ptr
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+########
+#CONFIG#
+########
+bspc monitor -d 1 2 3 4
+
+bspc config border_width              1   
+bspc config window_gap                10  
+bspc config split_ratio               0.5
+
+bspc config borderless_monocle        true
+bspc config gapless_monocle           true
+bspc config single_monocle            true
+
+bspc config focus_follows_pointer     true
+
+#######
+#RULES#
+#######
+
+bspc subscribe node_add | while read -a msg ; do
+    node_id=${msg[4]}
+    bspc node "$node_id" -t floating
+    xdo raise -N Plank
+done &

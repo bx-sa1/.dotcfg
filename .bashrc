@@ -5,11 +5,11 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls --color=auto'
+alias ls='ls --color=auto -la'
 alias grep='grep --color=auto'
 alias rip_sample='yt-dlp -x -P ~/Music/prod/SAMPLES/my-samples'
 alias dotcfg="git --git-dir=$HOME/.dotcfg/ --work-tree=$HOME"
-alias qtilecfg="nvim ~/.config/qtile/config.py"
+alias pls="expac -H M '%m\t%n' | sort -h"
 
 source /usr/share/bash-completion/completions/git
 __git_complete dotcfg __git_main
