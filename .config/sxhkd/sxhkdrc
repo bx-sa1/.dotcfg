@@ -8,7 +8,7 @@ super + equal
 #
 
 super + r
-    rofi 
+    rofi -show drun
 
 super + Return
     alacritty
@@ -37,8 +37,8 @@ super + z
 #
 
 # quit/restart bspwm
-super + alt + r
-	bspc wm -r
+super + alt + {q,r}
+	{bspc quit, bspc wm -r}
 
 # close and kill
 super + {_,shift + }w
