@@ -29,7 +29,7 @@ super + Return
 
 # make sxhkd reload its configuration files:
 super + Escape
-    pkill -USR1 -x sxhkd; sleep 1
+    pkill -USR1 -x sxhkd; sleep 1; notify-send "sxhkd" "Config reloaded"
 
 #
 # tabs
