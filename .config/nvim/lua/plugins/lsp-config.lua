@@ -14,6 +14,7 @@ return {
       require('lspconfig')["tsserver"].setup{}
       require('lspconfig')["clangd"].setup{}
       require('lspconfig')["svelte"].setup{}
+      require('lspconfig')["gopls"].setup{}
       require('lspconfig')["eslint"].setup {
         on_attach = function(client, bufnr)
           vim.api.nvim_create_autocmd("BufWritePre", {
@@ -59,10 +60,9 @@ return {
 
       -- Global mappings.
       -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-      vim.keymap.set('n', '<leader>cd', function() fzf.workspace_diagnostics() end, { desc = "Workspace Diagnostics" })
-      vim.keymap.set('n', '<leader>cd', function() fzf.document_diagnostics() end, { desc = "Document Diagnostics" })
-      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-      vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+      vim.keymap.set('n', '<leader>cd', function() fzf.diagnostics_document() end, { desc = "Document Diagnostics" })
+      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Previous diagnostics" })
+      vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Next diagnostics" })
 
 
       -- Use LspAttach autocommand to only map the following keys
@@ -79,24 +79,24 @@ return {
             return { buffer = ev.buf, desc = d }
           end
 
-          vim.keymap.set('n', '<localleader>gD', function() fzf.lsp_declarations() end, opts("Find Declarations"))
-          vim.keymap.set('n', '<localleader>gd', function() fzf.lsp_definitions() end, opts("Find Definitions"))
-          vim.keymap.set('n', '<localleader>gr', function() fzf.lsp_references() end, opts("Find References"))
-          vim.keymap.set('n', '<localleader>gi', function() fzf.lsp_implementations() end, opts("Find Implementation"))
-          vim.keymap.set('n', '<localleader>K', vim.lsp.buf.hover, opts("Hover"))
-          vim.keymap.set('n', '<localleader><C-k>', vim.lsp.buf.signature_help, opts("Signature Help"))
-          vim.keymap.set('n', '<localleader><space>wa', vim.lsp.buf.add_workspace_folder, opts("Add Workspace Folder"))
-          vim.keymap.set('n', '<localleader><space>wr', vim.lsp.buf.remove_workspace_folder, opts("Remove Workspace Folder"))
-          vim.keymap.set('n', '<localleader><space>wl', function()
+          vim.keymap.set('n', 'gD', function() fzf.lsp_declarations() end, opts("Find Declarations"))
+          vim.keymap.set('n', 'gd', function() fzf.lsp_definitions() end, opts("Find Definitions"))
+          vim.keymap.set('n', 'gr', function() fzf.lsp_references() end, opts("Find References"))
+          vim.keymap.set('n', 'gi', function() fzf.lsp_implementations() end, opts("Find Implementation"))
+          vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts("Hover"))
+          vim.keymap.set('n', '<C-K>', vim.lsp.buf.signature_help, opts("Signature Help"))
+          vim.keymap.set('n', '<leader>cwa', vim.lsp.buf.add_workspace_folder, opts("Add Workspace Folder"))
+          vim.keymap.set('n', '<leader>cwr', vim.lsp.buf.remove_workspace_folder, opts("Remove Workspace Folder"))
+          vim.keymap.set('n', '<leader>cwl', function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
           end, opts("List Workspace Folders"))
-          vim.keymap.set('n', '<localleader><space>D', function() fzf.lsp_type_definition() end, opts("Find Type Definitions"))
-          vim.keymap.set('n', '<localleader><space>rn', vim.lsp.buf.rename, opts("Rename"))
-          vim.keymap.set({ 'n', 'v' }, '<localleader><space>ca', function() fzf.lsp_code_actions() end, opts("Code Action"))
-          vim.keymap.set('n', '<localleader><space>f', function()
+          vim.keymap.set('n', '<leader>cD', function() fzf.lsp_type_definition() end, opts("Find Type Definitions"))
+          vim.keymap.set('n', '<leader>cr', vim.lsp.buf.rename, opts("Rename"))
+          vim.keymap.set({ 'n', 'v' }, '<leader>ca', function() fzf.lsp_code_actions() end, opts("Code Action"))
+          vim.keymap.set('n', '<leader>cf', function()
             vim.lsp.buf.format { async = true }
           end, opts("Format"))
-          vim.keymap.set('n', '<localleader>c', function() fzf.complete_bline() end, opts("Complete line"))
+          vim.keymap.set('n', '<leader>cc', function() fzf.complete_bline() end, opts("Complete line"))
         end,
       })
 		end

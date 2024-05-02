@@ -11,6 +11,10 @@ alias rip_sample='yt-dlp -x -P ~/Music/prod/SAMPLES/my-samples'
 alias dotcfg="git --git-dir=$HOME/.dotcfg/ --work-tree=$HOME"
 alias pls="expac -H M '%m\t%n' | sort -h"
 
+function mkdircd {
+  mkdir -p $@ && cd $@
+}
+
 source /usr/share/bash-completion/completions/git
 __git_complete dotcfg __git_main
 

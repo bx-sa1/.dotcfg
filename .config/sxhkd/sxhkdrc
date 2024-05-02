@@ -15,7 +15,7 @@ super + Return
 
 # make sxhkd reload its configuration files:
 super + Escape
-    pkill -USR1 -x sxhkd; sleep 1
+    pkill -USR1 -x sxhkd; sleep 1; notify-send "Config Reloaded"
 
 #
 # tabs
@@ -37,8 +37,16 @@ super + z
 #
 
 # quit/restart bspwm
-super + alt + {q,r}
-	{bspc quit, bspc wm -r}
+super + alt + {r,q}
+	{bspc wm -r, \
+  choice=$(echo -e "Shutdown\nRestart\nSuspend\nHibernate\nQuit" | rofi -dmenu); \
+  case $choice in \
+    Shutdown) systemctl shutdown;; \
+    Restart) systemctl reboot;; \
+    Suspend) systemctl suspend;; \
+    Hibernate) systemctl hibernate;; \
+    Quit) bspc quit;; \
+  esac}
 
 # close and kill
 super + {_,shift + }w
