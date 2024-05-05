@@ -36,7 +36,7 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -74,19 +74,7 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
-(setq org-agenda-files '("notes.org" "quick_notes.org"))
 
-(use-package! org-roam
-  :init
-  (map! :leader
-        :prefix "n"
-        :desc "org-roam" "l" #'org-roam-buffer-toggle
-        :desc "org-roam-node-insert" "i" #'org-roam-node-insert
-        :desc "org-roam-node-find" "f" #'org-roam-node-find
-        :desc "org-roam-ref-find" "r" #'org-roam-ref-find
-        :desc "org-roam-show-graph" "g" #'org-roam-show-graph
-        :desc "jethro/org-capture-slipbox" "<tab>" #'jethro/org-capture-slipbox
-        :desc "org-roam-capture" "c" #'org-roam-capture)
-  (setq org-roam-directory (concat org-directory "roam/"))
-  :config
-  (org-roam-db-autosync-mode))
+(setq org-capture-templates
+      '(("w" "Workout" table-line (file+headline "workout-log.org" "Workout Log")
+         "| %t | %^{exercise} | %^{progression} | %^{sets} | %^{reps} | %^{weight} | %^{difficulty} | %? |")))
