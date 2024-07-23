@@ -1,11 +1,17 @@
-super + minus
-    tdrop -ma -w -2 -y 67% -h 33% alacritty
+#GPU SCREEN RECORDER start replay
+super + backslash
+  save-replay.sh
 
-super + equal
-    tdrop -ma -w -2 -y 25% -h 75% spotify-launcher
-#
+super + ctrl + backslash
+  start-replay.sh
+
+super + ctrl + shift + backslash
+  stop-replay.sh
 # wm independent hotkeys
 #
+
+super + {_,shift +} v
+  clipcat-menu && {sleep 1, xdotool type "$(xclip -out -selection clipboard)"}
 
 XF86AudioRaiseVolume
     amixer sset Master 5%+
@@ -22,7 +28,7 @@ XF86AudioPrev
     playerctl previous
 
 super + r
-    rofi -show drun
+   rofi -show combi -modes combi -combi-modes "window,drun,run" 
 
 super + Return
     alacritty
@@ -82,6 +88,11 @@ super + g
 super + d
     $HOME/.local/bin/bspwm_hide_windows
 
+super + equal
+  $HOME/.config/bspwm/extra_desktop add
+
+super + minus
+  $HOME/.config/bspwm/extra_desktop remove
 #
 # state/flags
 #
@@ -115,7 +126,7 @@ super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
 
 # focus the last node/desktop
-super + {grave,Tab}
+super + {Tab,shift + Tab}
 	bspc {node,desktop} -f last
 
 # focus the older or newer node in the focus history

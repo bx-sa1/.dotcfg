@@ -1,58 +1,41 @@
 #!/bin/sh
 
 xsetroot -cursor_name left_ptr
-pgrep -x sxhkd > /dev/null || sxhkd &
+pgrep -x sxhkd >/dev/null || sxhkd &
 
 ########
 #CONFIG#
 ########
-bspc monitor -d 1 2 3 4 5 6 7 8 9
+bspc monitor -d     
 
-bspc config border_width              1   
-bspc config window_gap                10  
-bspc config split_ratio               0.5
+bspc config border_width 1
+bspc config window_gap 5
+bspc config split_ratio 0.5
 
-bspc config borderless_monocle        true
-bspc config gapless_monocle           true
-bspc config single_monocle            true
+bspc config borderless_monocle true
+bspc config gapless_monocle true
 
-bspc config focus_follows_pointer     true
+bspc config focus_follows_pointer true
+bspc config ignore_ewmh_focus true
 
 #######
 #RULES#
 #######
 
-declare -A fs_mon
-declare -A fs_desk
-bspc subscribe node_add node_state desktop_focus | while read -a msg ; do
-  if [[ ${msg[0]} == node_add ]];
-  then
-    node_id=${msg[4]}
-    bspc node "$node_id" -t floating
-  elif [[ ${msg[0]} == node_state ]];
-  then
-    state=${msg[4]}
-    flag=${msg[5]}
-    if [[ "$state" != fullscreen ]]; then continue; fi
-    if [[ "$flag" == on ]]; then
-      fs_mon[${msg[1]}]=1
-      fs_desk[${msg[2]}]=1
-      xdo lower -N Plank
-    else
-      unset fs_mon[${msg[1]}]
-      unset fs_desk[${msg[2]}]
-      xdo raise -N Plank
-    fi
-    notify-send "node_state" "Fullscreen Monitors: ${!fs_mon[@]}\nFullscreen Desktops: ${!fs_desk[@]}"
-  elif [[ ${msg[0]} == desktop_focus ]];
-  then
-    mon_id=${msg[1]}
-    desk_id=${msg[2]}
-    if [[ "${fs_mon[$mon_id]}" == 1 ]] && [[ "${fs_desk[$desk_id]}" == 1 ]];
-    then
-      xdo lower -N Plank
-    else
-      xdo raise -N Plank
-    fi
-  fi
-done & > ~/.bspwm-subscribe-log
+bspc rule -a polybar:Polybar manage=off
+
+bspc rule -a firefox desktop=
+bspc rule -a steam desktop= focus=off
+bspc rule -a Lutris desktop= focus=off
+bspc rule -a REAPER desktop= focus=off
+bspc rule -a com.bitwig.BitwigStudio desktop= focus=off
+bspc rule -a Qtractor desktop= focus=off
+bspc rule -a Spotify desktop= focus=off
+bspc rule -a discord desktop= focus=off
+
+bspc rule -a Pcmanfm state=floating
+bspc rule -a Alacritty state=floating
+bspc rule -a Zenity state=floating
+bspc rule -a "steam:*:Friends List" state=floating
+
+bspc rule -a firefox:Toolkit:* state=floating sticky=on

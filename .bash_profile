@@ -21,7 +21,15 @@ export PATH="$PATH:$GEM_HOME/bin"
 export QSYS_ROOTDIR="/home/baba/.local/bin/intelFPGA_lite/22.1std/quartus/sopc_builder/bin"
 
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
-	exec startx -- -keeptty > ~/.xorg.log 2>&1
+	exec startx -- -keeptty >~/.xorg.log 2>&1
 fi
 
 export PATH=$PATH:/home/baba/.spicetify
+
+export COLOR_FG="#C5C8C6"
+export COLOR_BG="#282A2E"
+export COLOR_BG_ALT="#373B41"
+export COLOR_PRIMARY="#42A5F5"
+export COLOR_SECONDARY="#8ABEB7"
+export COLOR_ALERT="#A54242"
+export COLOR_DISABLED="#707880"
