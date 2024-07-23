@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function add() {
+	if [ -n $last_desktop ] && [ $last_desktop -eq $last_desktop ] 2>/dev/null; then
+		desktop_list+=($((last_desktop + 1)))
+	else
+		desktop_list+=(1)
+	fi
+}
+
+function remove() {
+	if [ -n $last_desktop ] && [ $last_desktop -eq $last_desktop ] 2>/dev/null; then
+		unset desktop_list[-1]
+	fi
+}
+
+desktop_list=()
+IFS=$'\n'
+while read -r line; do
+	desktop_list+=($line)
+done <<<$(bspc query -D --names)
+
+last_desktop=${desktop_list[-1]}
+
+case $1 in
+add) add ;;
+remove) remove ;;
+esac
+
+bspc monitor -d ${desktop_list[@]}

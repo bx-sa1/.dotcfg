@@ -1,0 +1,11 @@
+Net/EnableEventSounds 1
+
+Xft/Antialias 1
+Xft/Hinting 1
+Xft/HintStyle "hintslight"
+Xft/RGBA "rgb"
+
+Net/IconThemeName "Papirus-Dark"
+Net/ThemeName "Dracula"
+Gtk/FontName "sans 9"
+Gtk/CursorThemeName "capitaine-cursors"
