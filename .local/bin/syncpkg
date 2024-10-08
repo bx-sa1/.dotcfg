@@ -1,0 +1,72 @@
+#!/bin/bash
+
+help() {
+	echo "
+  syncpkg: Syncs PKGBUILD repos with master and installs them. Can be piped.
+
+  Usage: syncpkg [option] [pkg-name]
+  options:
+    -p|--print = Sync and print PKGBUILD
+    -a|--all = Sync all packages in $SYNCPKG_BUILD_DIR"
+	exit
+}
+
+while [[ $# -gt 0 ]]; do
+	case $1 in
+	-p | --print) PRINT_PB=1 ;;
+	-a | --all) SYNC_ALL=1 ;;
+	-h | --help) help ;;
+	-*)
+		echo "Unknown param: $1"
+		exit 1
+		;;
+	*)
+		break
+		;;
+	esac
+	shift
+done
+
+basedir=${SYNCPKG_BUILD_DIR:-$HOME/.cache/build/}
+if [[ ! -d $basedir ]]; then mkdir -p "$basedir"; fi
+
+cd $basedir
+
+if [[ -z $SYNC_ALL ]]; then
+	pkgs=${@:1}
+	if [[ -z $pkgs ]]; then
+		pkgs="$(cat | sed "s/[\n\t\r,]/ /g")"
+		if [[ -z $pkgs ]]; then
+			echo "No package specified"
+			exit
+		fi
+	fi
+else
+	if [[ -z "$(ls -A)" ]]; then echo "$basedir is empty." && exit; fi
+	pkgs=""
+	for dir in *; do
+		if [[ -f $dir/PKGBUILD ]]; then
+			printf -v pkgs "%s %s " $pkgs $dir
+		fi
+	done
+fi
+
+echo $pkgs
+
+for pkg in $pkgs; do
+	[[ -z $SYNCPKG_REPOS ]] && echo "No repos set in SYNCPKG_REPOS variable" ||
+		for repo in ${SYNCPKG_REPOS//;/ }; do
+			git -C ${pkg} pull || git clone $repo/${pkg}.git && break
+		done
+	if [[ $? != 0 ]]; then
+		echo "Package '$pkg' not found"
+		exit
+	fi
+
+	if [[ ! -z $PRINT_PB ]]; then
+		cat ${pkg}/PKGBUILD
+	else
+		cd ${pkg}
+		makepkg -si </dev/tty
+	fi
+done <<<$pkgs
