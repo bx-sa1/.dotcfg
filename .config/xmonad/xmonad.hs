@@ -1,6 +1,8 @@
 import XMonad
+import XMonad.Config.Desktop
 
 main :: IO ()
-main = xmonad $ def
+main = xmonad $ desktopConfig
   { modMask = mod4Mask
+  , terminal = "alacritty"
   }

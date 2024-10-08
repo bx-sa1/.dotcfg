@@ -17,4 +17,6 @@ session=${1:-bspwm}
 case $session in
 bspwm) exec bspwm ;;
 openbox) exec openbox-session ;;
+xmonad) exec xmonad ;;
+herbst) exec herbstluftwm ;;
 esac
