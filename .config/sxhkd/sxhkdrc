@@ -1,12 +1,24 @@
-#GPU SCREEN RECORDER start replay
-super + backslash
+#localleader
+super + backslash; shift + b
+  toggle-replay-buffer.sh
+
+super + backslash; b; 
   save-replay.sh
 
-super + ctrl + backslash
-  start-replay.sh
+super + backslash; s
+  flameshot gui
 
-super + ctrl + shift + backslash
-  stop-replay.sh
+# add to tabbed container
+super + backslash; {h,j,k,l}
+    tabc.sh attach $(bspc query -N -n) $(bspc query -N -n {west,south,north,east})
+
+# create/remove from tabbed container
+super + backslash; t 
+    id=$(bspc query -N -n); \
+    [[ "$(tabc.sh printclass $id)" == "tabbed" ]] \
+    && tabc.sh detach $id \
+    || tabc.sh create $id
+
 # wm independent hotkeys
 #
 
@@ -38,35 +50,12 @@ super + Escape
     pkill -USR1 -x sxhkd; sleep 1; notify-send "sxhkd" "Config reloaded"
 
 #
-# tabs
-#
-
-# add to tabbed container
-super + shift + {Left,Down,Up,Right}
-    tabc attach $(bspc query -N -n) {$(bspc query -N -n west),$(bspc query -N -n south),$(bspc query -N -n north),$(bspc query -N -n east)}
-
-# create/remove from tabbed container
-super + z 
-    id=$(bspc query -N -n); \
-    [[ "$(tabc printclass $id)" == "tabbed" ]] \
-    && tabc detach $id \
-    || tabc create $id
-
-#
 # bspwm hotkeys
 #
 
 # quit/restart bspwm
 super + alt + {r,q}
-	{bspc wm -r, \
-  choice=$(echo -e "Shutdown\nRestart\nSuspend\nHibernate\nQuit" | rofi -dmenu); \
-  case $choice in \
-    Shutdown) systemctl shutdown;; \
-    Restart) systemctl reboot;; \
-    Suspend) systemctl suspend;; \
-    Hibernate) systemctl hibernate;; \
-    Quit) bspc quit;; \
-  esac}
+	{bspc wm -r, $HOME/.config/sxhkd/quit.sh}
 
 # close and kill
 super + {_,shift + }w

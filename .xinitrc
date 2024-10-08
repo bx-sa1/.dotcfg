@@ -8,13 +8,13 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 fi
 
 xsettingsd &
-dunst &
-polybar &
-xss-lock ~/.local/bin/xsecurelock-env.sh &
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-nitrogen --restore &
-dex -a &
+xscreensaver --no-splash &
+xss-lock -- xscreensaver-command --lock &
 pcmanfm -d &
-caffeine &
 clipcatd &
-exec bspwm
+
+session=${1:-bspwm}
+case $session in
+bspwm) exec bspwm ;;
+openbox) exec openbox-session ;;
+esac
