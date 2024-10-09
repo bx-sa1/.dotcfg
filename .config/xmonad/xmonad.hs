@@ -7,17 +7,19 @@ import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Layout.Spacing
 import XMonad.Layout.SimpleDecoration
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Fullscreen
 
 main :: IO ()
-main = xmonad $ ewmhFullscreen $ ewmh $ xmobarProp $ myConfig
+main = xmonad $ ewmhFullscreen $ ewmh $  myConfig
 
 myConfig = def
   { modMask = myModMask
   , terminal = "alacritty"
   , startupHook = myStartupHook
   , workspaces = myWorkspaces
-  , manageHook = myManageHook
-  , layoutHook = spacingWithEdge 10 $ myLayoutHook
+  , manageHook = myManageHook <+> manageHook def
+  , layoutHook = smartBorders $ spacingWithEdge 10 $ myLayoutHook
   } 
   `additionalKeysP`
   [ ("M-r", spawn "rofi -show combi -combi-modes drun,run,windows")
@@ -50,6 +52,12 @@ myManageHook = composeAll
   , className =? "Lutris" --> doShift "games"
   , className =? "Discord" --> doShift "games"
   , className =? "REAPER" --> doShift "music"
+  , className =? "com.bitwig.BitwigStudio" --> doShift "music"
+  , className =? "Qtractor" --> doShift "music"
+  , className =? "Spotify" --> doShift "music"
+  , className =? "Pcmanfm" --> doFloat
+  , className =? "Alacritty" --> doFloat
+  , className =? "firefox" <&&> appName =? "Toolkit" --> doFloat <+> doIgnore
   ]
 
 myLayoutHook = tiled ||| Mirror tiled ||| Full

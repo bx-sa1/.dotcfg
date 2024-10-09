@@ -6,5 +6,5 @@ Shutdown) systemctl shutdown ;;
 Restart) systemctl reboot ;;
 Suspend) systemctl suspend ;;
 Hibernate) systemctl hibernate ;;
-Quit) pkill $XSESSION_PID ;;
+Quit) kill $XSESSION_PID ;;
 esac
