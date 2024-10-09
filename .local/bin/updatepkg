@@ -1,0 +1,37 @@
+#!/bin/bash
+
+help() {
+	echo "
+  updatepkg updates PKGBUILDS in a directory or [pkg]
+  Usage: updatepkg [pkg]"
+	exit
+}
+
+while [[ $# -gt 0 ]]; do
+	case $1 in
+	-h | --help) help ;;
+	-*)
+		echo "Unknown param: $1"
+		exit 1
+		;;
+	*)
+		break
+		;;
+	esac
+	shift
+done
+
+basedir=${AUR_BUILD_DIR:-$HOME/.cache/build/}
+if [[ -d $basedir ]]; then
+	cd $basedir
+	for pkg in */; do
+		if [[ -f $pkg/PKGBUILD ]]; then
+			git -C $pkg pull >/dev/null 2>&1
+			if [[ $? -eq 0 ]]; then
+				echo "$(echo "$pkg" | sed "s/\/$//g")"
+			else
+				echo ${pkg} 1>&2
+			fi
+		fi
+	done
+fi

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+URL=$(echo "" | dmenu -p "URL:")
+[ ! -z "$URL" ] && firefox --search $URL

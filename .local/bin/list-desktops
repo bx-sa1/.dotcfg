@@ -1,0 +1,20 @@
+#!/bin/bash
+
+notiTag="desktop-noti"
+desktops=$(bspc query -D --names)
+occupied=$(bspc query -D -d .occupied --names)
+
+occupied_list=""
+unoccupied_list=""
+for desktop in $desktops
+do
+    if [[ $occupied == *$desktop* ]]; then
+        occupied_list+="<i><b><u>${desktop}</u></b></i> "
+    else
+        unoccupied_list+="${desktop} "
+    fi
+done
+
+notify-send -a "list-desktops" -u low -h string:x-dunst-stack-tag:$notiTag \
+    "Desktops" \
+    "Occupied: ${occupied_list}\nUnoccupied: ${unoccupied_list}"

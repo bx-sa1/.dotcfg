@@ -1,0 +1,49 @@
+#!/bin/bash
+
+function get_volume {
+    amixer get Master | grep '%' | head -n 1 | cut -d '[' -f 2 | cut -d '%' -f 1
+}
+
+function is_mute {
+    amixer get Master | grep '%' | grep -oE '[^ ]+$' | grep off
+}
+
+function send_notification {
+    volume=$(get_volume)
+    if [[ $1 == "mute" ]] ; then
+	msg="Mute"
+    else
+	msg="Volume: $volume\%"
+    fi
+
+    # Send the notification
+    notify-send "Volume" "$msg" \
+	     -i audio-volume-muted-blocking \
+	     -t 8000 \
+	     -u normal \
+	     -h string:x-dunst-stack-tag:"volume-notification" \
+	     -h int:value:"$volume"
+}
+
+case $1 in
+    up)
+	# Set the volume on (if it was muted)
+	amixer set Master on > /dev/null
+	# Up the volume (+ 2%)
+	amixer sset Master 2%+ > /dev/null
+	;;
+    down)
+	amixer set Master on > /dev/null
+	amixer sset Master 2%- > /dev/null
+	;;
+    mute)
+    	# Toggle mute
+	amixer set Master 1+ toggle > /dev/null
+	;;
+esac
+
+if [[ $(is_mute) == "[On]" ]] ; then
+    send_notification "mute"
+else
+    send_notification "not mute"
+fi

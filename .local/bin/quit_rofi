@@ -1,0 +1,10 @@
+#!/bin/bash
+
+choice=$(echo -e "Shutdown\nRestart\nSuspend\nHibernate\nQuit" | rofi -dmenu)
+case $choice in
+Shutdown) systemctl shutdown ;;
+Restart) systemctl reboot ;;
+Suspend) systemctl suspend ;;
+Hibernate) systemctl hibernate ;;
+Quit) pkill $XSESSION_PID ;;
+esac
