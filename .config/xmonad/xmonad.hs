@@ -1,25 +1,35 @@
 import XMonad
 import XMonad.Util.EZConfig
 import XMonad.Util.SpawnOnce
+import XMonad.Util.Run
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
+import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Spacing
 import XMonad.Layout.SimpleDecoration
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen
 
 main :: IO ()
+<<<<<<< HEAD
 main = xmonad $ ewmhFullscreen $ ewmh $  myConfig
+=======
+main = do
+  safeSpawn "mkfifo" ["/tmp/xmonad-polybar"]
+  handle <- spawnPipe "stdbuf -i 0 tee /tmp/xmonad-polybar"
+  xmonad $ ewmhFullscreen $ ewmh $ docks $ myConfig handle
+>>>>>>> 5eef20f (bar)
 
-myConfig = def
+myConfig handle = def
   { modMask = myModMask
   , terminal = "alacritty"
   , startupHook = myStartupHook
   , workspaces = myWorkspaces
-  , manageHook = myManageHook <+> manageHook def
-  , layoutHook = smartBorders $ spacingWithEdge 10 $ myLayoutHook
+  , manageHook = myManageHook <+> manageDocks <+> manageHook def
+  , layoutHook = avoidStruts $ spacingWithEdge 10 $ myLayoutHook
+  , logHook = dynamicLogWithPP $ myPP handle
   } 
   `additionalKeysP`
   [ ("M-r", spawn "rofi -show combi -combi-modes drun,run,windows")
@@ -67,3 +77,7 @@ myLayoutHook = tiled ||| Mirror tiled ||| Full
     ratio   = 1/2    -- Default proportion of screen occupied by master pane
     delta   = 3/100  -- Percent of screen to increment by when resizing panes
 
+myPP handle = def 
+  { ppOutput = hPutStrLn handle 
+  , ppOrder = \(_:l:_:_) -> [l]
+  }
