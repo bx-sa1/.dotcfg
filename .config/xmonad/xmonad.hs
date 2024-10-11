@@ -13,14 +13,10 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen
 
 main :: IO ()
-<<<<<<< HEAD
-main = xmonad $ ewmhFullscreen $ ewmh $  myConfig
-=======
 main = do
   safeSpawn "mkfifo" ["/tmp/xmonad-polybar"]
   handle <- spawnPipe "stdbuf -i 0 tee /tmp/xmonad-polybar"
   xmonad $ ewmhFullscreen $ ewmh $ docks $ myConfig handle
->>>>>>> 5eef20f (bar)
 
 myConfig handle = def
   { modMask = myModMask
@@ -28,7 +24,7 @@ myConfig handle = def
   , startupHook = myStartupHook
   , workspaces = myWorkspaces
   , manageHook = myManageHook <+> manageDocks <+> manageHook def
-  , layoutHook = avoidStruts $ spacingWithEdge 10 $ myLayoutHook
+  , layoutHook = avoidStruts $ smartBorders $ spacingWithEdge 10 $ myLayoutHook
   , logHook = dynamicLogWithPP $ myPP handle
   } 
   `additionalKeysP`
