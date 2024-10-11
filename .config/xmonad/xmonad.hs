@@ -11,6 +11,9 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.SimpleDecoration
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen
+import XMonad.Actions.DynamicWorkspaces
+import XMonad.Actions.CopyWindow(copy)
+import qualified XMonad.StackSet as W
 
 main :: IO ()
 main = do
@@ -26,10 +29,15 @@ myConfig handle = def
   , manageHook = myManageHook <+> manageDocks <+> manageHook def
   , layoutHook = avoidStruts $ smartBorders $ spacingWithEdge 10 $ myLayoutHook
   , logHook = dynamicLogWithPP $ myPP handle
-  } 
+  }
+  `additionalKeys`
+  zip (zip (repeat (myModMask)) [xK_1..xK_9]) (map (withNthWorkspace W.greedyView) [0..])
+  ++ zip (zip (repeat (myModMask .|. shiftMask)) [xK_1..xK_9]) (map (withNthWorkspace W.shift) [0..])
   `additionalKeysP`
   [ ("M-r", spawn "rofi -show combi -combi-modes drun,run,windows")
   , ("M-S-q", spawn "quit_rofi")
+  , ("M-=", addWorkspacePrompt def)
+  , ("M--", removeWorkspace)
   ]
   `remapKeysP` 
   [ ("M-w", "M-S-c") 
