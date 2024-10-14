@@ -1,3 +1,7 @@
+import = [
+  "~/.config/alacritty/themes/themes/gruvbox_dark.toml"
+]
+
 [window]
 opacity = 0.9
 
@@ -5,7 +9,6 @@ opacity = 0.9
 bindings = [
    { key = "Return", mods = "Control|Shift", action = "SpawnNewInstance" }
 ]
-
 
 [font]
 size = 10.0

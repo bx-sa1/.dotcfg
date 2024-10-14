@@ -6,6 +6,6 @@ Xft/HintStyle "hintslight"
 Xft/RGBA "rgb"
 
 Net/IconThemeName "Papirus-Dark"
-Net/ThemeName "Dracula"
+Net/ThemeName "gruvbox-Yellow-Dark"
 Gtk/FontName "sans 9"
 Gtk/CursorThemeName "capitaine-cursors"

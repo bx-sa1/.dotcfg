@@ -7,6 +7,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.Place
 import XMonad.Layout.Spacing
 import XMonad.Layout.SimpleDecoration
 import XMonad.Layout.NoBorders
@@ -23,10 +24,15 @@ main = do
 
 myConfig handle = def
   { modMask = myModMask
+  , normalBorderColor = "#928374"
+  , focusedBorderColor =  "#d79921"
   , terminal = "alacritty"
   , startupHook = myStartupHook
   , workspaces = myWorkspaces
-  , manageHook = myManageHook <+> manageDocks <+> manageHook def
+  , manageHook = placeHook (smart (0.5, 0.5))
+                  <> myManageHook 
+                  <+> manageDocks 
+                  <+> manageHook def
   , layoutHook = avoidStruts $ smartBorders $ spacingWithEdge 10 $ myLayoutHook
   , logHook = dynamicLogWithPP $ myPP handle
   }
