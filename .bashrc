@@ -21,8 +21,8 @@ function mkdircd {
 }
 
 function music2vid {
-  image=$1
-  audio=$2
+  image=$(find ~/Pictures/type-beat-bgs -type f | shuf -n 1 -)
+  audio=$1
 
   ffmpeg -r 1 -loop 1 -i $image -i $audio -acodec copy -r 1 -shortest -vf "scale=1920:1080:force_original_aspect_ratio=1,pad=1920:1080:(( (ow - iw)/2 )):(( (oh - ih)/2 ))" -sws_flags lanczos out.avi
 }
