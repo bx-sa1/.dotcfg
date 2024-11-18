@@ -4,7 +4,7 @@
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-export EDITOR=nvim
+export VISUAL=nvim
 export OBS_VKCAPTURE=1
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
@@ -18,6 +18,7 @@ export PATH="$PATH:/home/baba/.local/bin:/home/baba/.config/emacs/bin:/home/baba
 export PATH="$PATH:$(go env GOBIN):$(go env GOPATH)/bin"
 export GEM_HOME="$(gem env user_gemhome)"
 export PATH="$PATH:$GEM_HOME/bin"
+export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
 export QSYS_ROOTDIR="/home/baba/.local/bin/intelFPGA_lite/22.1std/quartus/sopc_builder/bin"
 
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then

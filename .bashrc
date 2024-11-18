@@ -15,6 +15,7 @@ alias pls="expac -H M '%m\t%n' | sort -h"
 alias workout-log="nvim ~/Documents/journals/workout-log.csv"
 alias t="todo.sh -t"
 alias notes="nvim ~/Documents/notes/QuickNotes.md"
+alias sudo="sudo -E -s"
 
 function mkdircd {
   mkdir -p $@ && cd $@
