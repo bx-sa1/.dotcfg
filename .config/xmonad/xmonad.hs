@@ -1,5 +1,7 @@
-import Colors
+import Control.Exception.Base
 import Data.Map qualified as M
+import System.Directory (getHomeDirectory)
+import System.FilePath ((</>))
 import XMonad
 import XMonad.Actions.CopyWindow (copy, copyToAll, killAllOtherCopies)
 import XMonad.Actions.DynamicWorkspaces
@@ -20,19 +22,29 @@ import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 
+loadColors :: IO [String]
+loadColors = do
+  home <- getHomeDirectory
+  file <- try $ home `</>` readFile "~/.cache/wal/colors" :: IO (Either SomeException String)
+  let colors = case file of
+        Left e -> repeat "#222222"
+        Right f -> take 8 $ lines f
+  return colors
+
 main :: IO ()
 main = do
   safeSpawn "mkfifo" ["/tmp/xmonad-polybar"]
   handle <- spawnPipe "stdbuf -i 0 tee /tmp/xmonad-polybar"
-  xmonad $ ewmhFullscreen . ewmh . docks $ myConfig handle
+  colors <- loadColors
+  xmonad $ ewmhFullscreen . ewmh . docks $ myConfig handle colors
 
 myModMask = mod4Mask
 
-myConfig handle =
+myConfig handle colors =
   def
     { modMask = mod4Mask,
-      normalBorderColor = color1,
-      focusedBorderColor = color5,
+      normalBorderColor = colors !! 1,
+      focusedBorderColor = colors !! 5,
       terminal = "alacritty",
       workspaces = ["home", "web", "dev", "music", "games"],
       startupHook = myStartupHook,
