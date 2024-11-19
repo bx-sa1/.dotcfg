@@ -2,10 +2,11 @@ return {
   { "rafi/awesome-vim-colorschemes" },
   { "dracula/vim" },
   { "morhetz/gruvbox" },
+  { "dylanaraps/wal.vim" },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox",
+      colorscheme = "wal",
       background = "dark",
     },
   },

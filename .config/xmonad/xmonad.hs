@@ -1,3 +1,4 @@
+import Colors
 import Data.Map qualified as M
 import XMonad
 import XMonad.Actions.CopyWindow (copy, copyToAll, killAllOtherCopies)
@@ -30,8 +31,8 @@ myModMask = mod4Mask
 myConfig handle =
   def
     { modMask = mod4Mask,
-      normalBorderColor = "#928374",
-      focusedBorderColor = "#d79921",
+      normalBorderColor = color1,
+      focusedBorderColor = color5,
       terminal = "alacritty",
       workspaces = ["home", "web", "dev", "music", "games"],
       startupHook = myStartupHook,
@@ -54,7 +55,7 @@ myConfig handle =
             tiled ||| Mirror tiled ||| Full
 
     myStartupHook = do
-      spawnOnce "nitrogen --restore"
+      spawnOnce "wal -R"
       spawnOnce "dunst"
       spawnOnce "polybar xmonad"
       spawnOnce "picom -b"
