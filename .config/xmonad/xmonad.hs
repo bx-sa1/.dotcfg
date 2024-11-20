@@ -25,7 +25,8 @@ import XMonad.Util.SpawnOnce
 loadColors :: IO [String]
 loadColors = do
   home <- getHomeDirectory
-  file <- try $ readFile $ home </> "~/.cache/wal/colors" :: IO (Either SomeException String)
+  let path = home </> ".cache/wal/colors"
+  file <- try $ readFile path :: IO (Either SomeException String)
   let colors = case file of
         Left e -> repeat "#222222"
         Right f -> take 8 $ lines f

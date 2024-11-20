@@ -9,6 +9,8 @@ fi
 
 [ -f /etc/xprofile ] && . /etc/xprofile
 [ -f ~/.xprofile ] && . ~/.xprofile
+[ -f ~/.cache/wal/colors.Xresources ] && xrdb -merge -I$HOME ~/.cache/wal/colors.Xresources
+[ -f ~/.Xresources ] && xrdb -merge -I$Home ~/.Xresources
 
 export XSESSION_PID="$$"
 

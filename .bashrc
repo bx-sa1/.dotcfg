@@ -39,6 +39,13 @@ function scrrec-stop {
   killall -SIGINT gpu-screen-recorder
 }
 
+function wal-set {
+  wp=$(feh -A 'echo %F;killall feh' ~/.local/share/wallpapers/)
+  wal -i "$wp"
+  xmonad --recompile
+  spicetify apply
+}
+
 source /usr/share/bash-completion/completions/git
 __git_complete dotcfg __git_main
 
