@@ -41,7 +41,7 @@ function scrrec-stop {
 
 function wal-set {
   wp=$(feh -A 'echo %F;killall feh' ~/.local/share/wallpapers/)
-  wal -i "$wp"
+  wal -i "$wp" $@
   xmonad --recompile
   spicetify apply
 }
@@ -53,3 +53,5 @@ PS1='[\u@\h \W]\$ '
 
 [ -f "/home/baba/.ghcup/env" ] && . "/home/baba/.ghcup/env" # ghcup-env
 export PATH=$PATH:/home/baba/.spicetify
+[ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
+export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1

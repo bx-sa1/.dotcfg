@@ -2,9 +2,12 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    opts = function(_, opts)
-      opts.options.section_separators = ""
-      opts.options.component_separators = ""
-    end,
+    opts = {
+      options = {
+        section_separators = "",
+        component_separators = "",
+        theme = "pywal-nvim",
+      },
+    },
   },
 }

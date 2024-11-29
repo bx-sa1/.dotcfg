@@ -80,14 +80,17 @@ myConfig handle colors =
         [ className =? "firefox" --> doShift "web",
           className =? "steam" --> doShift "games",
           className =? "Lutris" --> doShift "games",
-          className =? "Discord" --> doShift "games",
+          className =? "discord" --> doShift "games",
           className =? "REAPER" --> doShift "music",
           className =? "com.bitwig.BitwigStudio" --> doShift "music",
           className =? "Qtractor" --> doShift "music",
           className =? "Spotify" --> doShift "music",
           className =? "Pcmanfm" --> doFloat,
           className =? "Alacritty" --> doFloat,
-          className =? "firefox" <&&> appName =? "Toolkit" --> doFloat
+          className =? "firefox" <&&> appName =? "Toolkit" --> doFloat,
+          className =? "Localsend" --> doFloat,
+          className =? "pavucontrol" --> doFloat,
+          className =? "Anki" --> doFloat
         ]
     myManageHook =
       placeHook (smart (0.5, 0.5))
