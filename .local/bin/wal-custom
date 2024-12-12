@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+wal -n "$@"
+feh --bg-fill "$(<"${HOME}/.cache/wal/wal")"
+
