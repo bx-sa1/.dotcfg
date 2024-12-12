@@ -68,12 +68,7 @@ myConfig handle colors =
             tiled ||| Mirror tiled ||| Full
 
     myStartupHook = do
-      spawnOnce "wal -R"
-      spawnOnce "dunst"
-      spawnOnce "polybar xmonad"
       spawnOnce "picom -b"
-      spawnOnce "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
-      spawnOnce "dex -a -w"
 
     composedManageHook =
       composeAll

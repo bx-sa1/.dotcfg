@@ -22,7 +22,7 @@ export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
 export QSYS_ROOTDIR="/home/baba/.local/bin/intelFPGA_lite/22.1std/quartus/sopc_builder/bin"
 
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
-  exec startx $HOME/.xinitrc xmonad -- -keeptty >~/.xorg.log 2>&1
+  exec startx $HOME/.xinitrc xfce -- -keeptty >~/.xorg.log 2>&1
 fi
 
 export PATH=$PATH:/home/baba/.spicetify
