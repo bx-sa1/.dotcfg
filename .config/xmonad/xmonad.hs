@@ -85,7 +85,9 @@ myConfig handle colors =
           className =? "firefox" <&&> appName =? "Toolkit" --> doFloat,
           className =? "Localsend" --> doFloat,
           className =? "pavucontrol" --> doFloat,
-          className =? "Anki" --> doFloat
+          className =? "Anki" --> doFloat,
+          className =? "Xfce4-notifyd" --> doIgnore,
+          checkDock --> doIgnore
         ]
     myManageHook =
       placeHook (smart (0.5, 0.5))
