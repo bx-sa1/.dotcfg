@@ -70,6 +70,11 @@ myConfig handle colors =
     myStartupHook = do
       spawnOnce "picom -b"
 
+    isNotification = stringProperty "_NET_WM_WINDOW_TYPE" =? "_NET_WM_WINDOW_TYPE_NOTIFICATION"
+    isXfce = foldr (<||>) (return False) [className =? c | c <- xfceclasses]
+      where
+        xfceclasses = ["Xfce4-appfinder"]
+
     composedManageHook =
       composeAll
         [ className =? "firefox" --> doShift "web",
@@ -87,7 +92,9 @@ myConfig handle colors =
           className =? "pavucontrol" --> doFloat,
           className =? "Anki" --> doFloat,
           className =? "Xfce4-notifyd" --> doIgnore,
-          checkDock --> doIgnore
+          checkDock --> doIgnore,
+          isNotification --> doIgnore,
+          isXfce --> doFloat
         ]
     myManageHook =
       placeHook (smart (0.5, 0.5))
