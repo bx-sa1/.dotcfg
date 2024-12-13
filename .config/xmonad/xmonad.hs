@@ -8,7 +8,7 @@ import XMonad.Actions.DynamicWorkspaces
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers (isFullscreen)
+import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Place
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
@@ -70,11 +70,7 @@ myConfig handle colors =
     myStartupHook = do
       spawnOnce "picom -b"
 
-    isNotification = stringProperty "_NET_WM_WINDOW_TYPE" =? "_NET_WM_WINDOW_TYPE_NOTIFICATION"
-    isXfce = foldr (<||>) (return False) [className =? c | c <- xfceclasses]
-      where
-        xfceclasses = ["Xfce4-appfinder"]
-
+    isXfce = className ^? "Xfce4"
     composedManageHook =
       composeAll
         [ className =? "firefox" --> doShift "web",
@@ -91,10 +87,11 @@ myConfig handle colors =
           className =? "Localsend" --> doFloat,
           className =? "pavucontrol" --> doFloat,
           className =? "Anki" --> doFloat,
-          className =? "Xfce4-notifyd" --> doIgnore,
-          checkDock --> doIgnore,
-          isNotification --> doIgnore,
-          isXfce --> doFloat
+          checkDock --> doIgnore <+> doRaise,
+          isNotification --> doIgnore <+> doRaise,
+          isDialog --> doFloat,
+          isXfce --> doFloat,
+          transience'
         ]
     myManageHook =
       placeHook (smart (0.5, 0.5))
