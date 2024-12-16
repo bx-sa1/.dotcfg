@@ -16,15 +16,6 @@ export XSESSION_PID="$$"
 
 xsetroot -cursor_name left_ptr &
 
-session=${1:-bspwm}
-case $session in
-bspwm) startwm bspwm ;;
-openbox) startwm openbox-session ;;
-xmonad) startwm xmonad ;;
-herbst) startwm herbstluftwm ;;
-xfce) exec startxfce4 ;;
-esac
-
 function startwm() {
   xsettingsd &
   xscreensaver --no-splash &
@@ -38,3 +29,16 @@ function startwm() {
 
   exec "$1"
 }
+
+session=${1:-bspwm}
+case $session in
+bspwm) startwm bspwm ;;
+openbox) startwm openbox-session ;;
+xmonad) startwm xmonad ;;
+herbst) startwm herbstluftwm ;;
+xfce) exec startxfce4 ;;
+kde)
+  export DESKTOP_DESSION=plasma
+  exec startplasma-x11
+  ;;
+esac
