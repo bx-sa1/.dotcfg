@@ -8,6 +8,8 @@
 (cat ~/.cache/wal/sequences &)
 source ~/.cache/wal/colors-tty.sh
 
+set -o vi
+
 todo.sh ls
 
 alias ls='ls --color=auto -la'
@@ -17,18 +19,32 @@ alias dotcfg="git --git-dir=$HOME/.dotcfg/ --work-tree=$HOME"
 alias pls="expac -H M '%m\t%n' | sort -h"
 alias workout-log="nvim ~/Documents/journals/workout-log.csv"
 alias t="todo.sh -t"
-alias notes="nvim ~/Documents/notes/QuickNotes.md"
 alias sudo="sudo -E -s"
+alias vim="nvim"
+
+function reload-vim {
+  vim -S "Session.vim"
+}
+
+function xmonadcfg {
+  nvim "$HOME/.config/xmonad/xmonad.hs"
+}
+
+function notes {
+  file="${1:-QuickNotes}"
+  nvim "$HOME/Documents/notes/$file.md"
+}
 
 function mkdircd {
   mkdir -p $@ && cd $@
 }
 
 function music2vid {
-  image=$(find ~/Pictures/type-beat-bgs -type f | shuf -n 1 -)
-  audio=$1
+  random="$(find ~/Pictures/type-beat-bgs -type f | shuf -n 1 -)"
+  audio="$1"
+  image="${2:-$random}"
 
-  ffmpeg -r 1 -loop 1 -i $image -i $audio -acodec copy -r 1 -shortest -vf "scale=1920:1080:force_original_aspect_ratio=1,pad=1920:1080:(( (ow - iw)/2 )):(( (oh - ih)/2 ))" -sws_flags lanczos out.avi
+  ffmpeg -r 1 -loop 1 -i "$image" -i "$audio" -acodec copy -r 1 -shortest -vf "scale=1920:1080:force_original_aspect_ratio=1,pad=1920:1080:(( (ow - iw)/2 )):(( (oh - ih)/2 ))" -sws_flags lanczos out.avi
 }
 
 function scrrec-start {

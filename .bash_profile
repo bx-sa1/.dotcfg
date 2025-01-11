@@ -4,14 +4,16 @@
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-export VISUAL=nvim
+export VISUAL=vim
+export EDITOR=vim
 export OBS_VKCAPTURE=1
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
 export SDL_IM_MODULE=fcitx
 
-export QT_QPA_PLATFORMTHEME=qt5ct
+# export QT_QPA_PLATFORMTHEME=qt5ct
+export GTK_MODULES="canberra-gtk-module:$GTK_MODULES"
 
 export SYNCPKG_REPOS="https://aur.archlinux.org"
 export PATH="$PATH:/home/baba/.local/bin:/home/baba/.config/emacs/bin:/home/baba/.cargo/bin"
@@ -26,11 +28,3 @@ if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
 fi
 
 export PATH=$PATH:/home/baba/.spicetify
-
-export COLOR_FG="#C5C8C6"
-export COLOR_BG="#282A2E"
-export COLOR_BG_ALT="#373B41"
-export COLOR_PRIMARY="#42A5F5"
-export COLOR_SECONDARY="#8ABEB7"
-export COLOR_ALERT="#A54242"
-export COLOR_DISABLED="#707880"

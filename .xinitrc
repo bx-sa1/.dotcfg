@@ -7,8 +7,6 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
-[ -f /etc/xprofile ] && . /etc/xprofile
-[ -f ~/.xprofile ] && . ~/.xprofile
 [ -f ~/.cache/wal/colors.Xresources ] && xrdb -merge -I$HOME ~/.cache/wal/colors.Xresources
 [ -f ~/.Xresources ] && xrdb -merge -I$Home ~/.Xresources
 
@@ -25,7 +23,10 @@ function startwm() {
   polybar "$1" &
   dunst
   wal -R
+  clipcatd &
   dex -a -w &
+
+  start-sxhkd "$HOME/.config/sxhkd/keysrc"
 
   exec "$1"
 }
@@ -38,7 +39,11 @@ xmonad) startwm xmonad ;;
 herbst) startwm herbstluftwm ;;
 xfce) exec startxfce4 ;;
 kde)
-  export DESKTOP_DESSION=plasma
-  exec startplasma-x11
+  export DESKTOP_SESSION=plasma
+  exec /usr/bin/startplasma-x11
   ;;
+steam)
+  exec gamescope -e -- steam -tenfoot
+  ;;
+
 esac

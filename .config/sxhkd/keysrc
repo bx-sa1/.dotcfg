@@ -1,0 +1,50 @@
+#localleader
+super + backslash; shift + b
+  toggle-replay-buffer.sh
+
+super + backslash; b; 
+  save-replay.sh
+
+super + backslash; s
+  flameshot gui
+
+# add to tabbed container
+super + backslash; {h,j,k,l}
+    tabc.sh attach $(bspc query -N -n) $(bspc query -N -n {west,south,north,east})
+
+# create/remove from tabbed container
+super + backslash; t 
+    id=$(bspc query -N -n); \
+    [[ "$(tabc.sh printclass $id)" == "tabbed" ]] \
+    && tabc.sh detach $id \
+    || tabc.sh create $id
+
+# wm independent hotkeys
+#
+
+super + {_,shift +} v
+  clipcat-menu && {sleep 1, xdotool type "$(xclip -out -selection clipboard)"}
+
+XF86AudioRaiseVolume
+    amixer sset Master 5%+
+XF86AudioLowerVolume
+    amixer sset Master 5%-
+XF86AudioMute
+    amixer sset Master 1+ toggle
+
+XF86AudioPlay
+    playerctl play-pause
+XF86AudioNext
+    playerctl next
+XF86AudioPrev
+    playerctl previous
+
+super + r
+   rofi -show combi -modes combi -combi-modes "window,drun,run" 
+
+super + Return
+    alacritty
+
+# make sxhkd reload its configuration files:
+super + Escape
+    pkill -USR1 -x sxhkd; sleep 1; notify-send "sxhkd" "Config reloaded"

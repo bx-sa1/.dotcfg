@@ -1,32 +1,48 @@
 import Control.Exception.Base
+import DBus.Notify qualified as N
 import Data.Map qualified as M
 import System.Directory (getHomeDirectory)
 import System.FilePath ((</>))
 import XMonad
 import XMonad.Actions.CopyWindow (copy, copyToAll, killAllOtherCopies)
 import XMonad.Actions.DynamicWorkspaces
+import XMonad.Actions.Minimize
 import XMonad.Actions.UpdateFocus
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.Minimize
 import XMonad.Hooks.Place
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
+import XMonad.Layout.BoringWindows qualified as BW
+import XMonad.Layout.Column
+import XMonad.Layout.Combo
+import XMonad.Layout.Dishes
 import XMonad.Layout.FocusTracking
 import XMonad.Layout.Fullscreen
+import XMonad.Layout.IfMax
+import XMonad.Layout.Minimize
 import XMonad.Layout.NoBorders
 import XMonad.Layout.SimpleDecoration
 import XMonad.Layout.Spacing
+import XMonad.Layout.StackTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.TrackFloating
+import XMonad.Layout.TwoPane
+import XMonad.Layout.WindowNavigation
 import XMonad.StackSet (lookupWorkspace)
 import XMonad.StackSet qualified as W
 import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 
-isXfce = className ^? "Xfce4"
+sendNotif :: N.Client -> String -> IO ()
+sendNotif client str = do
+  let note = N.blankNote {N.summary = "XMonad", N.body = Just $ N.Text str}
+  N.notify client note
+  return ()
 
 loadColors :: IO [String]
 loadColors = do
@@ -44,13 +60,17 @@ myStartupHook = do
   spawnOnce "picom -b"
 
 myLayoutHook =
-  focusTracking $
-    smartBorders $
-      spacingWithEdge 10 $
+  windowNavigation $
+    focusTracking $
+      smartBorders $
         avoidStruts $
-          tiled ||| Mirror tiled ||| simpleTabbed
+          smartSpacingWithEdge 10 $
+            minimize $
+              BW.boringWindows $
+                ifmax ||| Full
   where
-    tiled = Tall nmaster delta ratio
+    ifmax = IfMax 1 Full (tiled ||| Mirror tiled)
+    tiled = combineTwo (TwoPane delta ratio) (simpleTabbed) (Column 1.0)
     nmaster = 1 -- Default number of windows in the master pane
     ratio = 1 / 2 -- Default proportion of screen occupied by master pane
     delta = 3 / 100 -- Percent of screen to increment by when resizing panes
@@ -77,48 +97,53 @@ myManageHook =
         "Anki",
         "Pcmanfm",
         "Alacritty",
-        "Thunar"
+        "Thunar",
+        "zenity"
       ]
+
+    isXfce = className ^? "Xfce4"
 
     composedManageHook =
       composeOne . concat $
-        [ [className =? c -?> doShift ws | (c, ws) <- cShifts],
+        [ [title =? "Picture-in-Picture" -?> doFloat],
+          [className =? c -?> doShift w | (c, w) <- cShifts],
           [className =? c -?> doFloat | c <- cFloats],
-          [className =? "firefox" <&&> appName =? "Toolkit" -?> doFloat],
           [checkDock -?> doRaise],
           [isNotification -?> doIgnore <+> doRaise],
           [isDialog -?> doFloat],
           [isXfce -?> doFloat],
+          [willFloat -?> doFloat],
           [transience]
         ]
 
-myPP handle =
-  dynamicLogWithPP $
-    def
-      { ppOutput = hPutStrLn handle,
-        ppOrder = \(_ : l : _ : _) -> [l]
-      }
+myPP =
+  def
+    { ppOrder = \(_ : l : _ : _) -> [l]
+    }
 
-addKeysP =
+myHandleEventHook = minimizeEventHook
+
+addKeysP client =
   [ ("M-w", kill),
-    ("M-r", spawn "rofi -show combi -combi-modes drun,run,windows"),
-    ("M-S-q", spawn "quit_rofi"),
     ("M-=", addWorkspacePrompt def),
     ("M--", removeWorkspace),
-    ("M-\\ S-b", spawn "toggle-replay-buffer.sh"),
-    ("M-\\ b", spawn "save-replay.sh"),
-    ("<Print>", spawn "flameshot gui"),
-    ("<XF86AudioRaiseVolume>", spawn "amixer sset Master 5%+"),
-    ("<XF86AudioLowerVolume>", spawn "amixer sset Master 5%-"),
-    ("<XF86AudioMute>", spawn "amixer sset Master 1+ toggle"),
-    ("<XF86AudioPlay>", spawn "playerctl play-pause"),
-    ("<XF86AudioNext>", spawn "playerctl next"),
-    ("<XF86AudioPrev>", spawn "playerctl previous"),
-    ("M-v", spawn "clipcat-menu && sleep 1"),
-    ("M-S-v", spawn "clipcat-menu && xdotool type \"$(xlip -out -selection clipboard\")"),
     ("M-s", windows copyToAll),
     ("M-S-s", killAllOtherCopies),
-    ("M-b", sendMessage ToggleStruts)
+    ("M-b", sendMessage ToggleStruts),
+    ("M-C-S-h", sendMessage $ Move L),
+    ("M-C-S-j", sendMessage $ Move D),
+    ("M-C-S-k", sendMessage $ Move U),
+    ("M-C-S-l", sendMessage $ Move R),
+    ("M-<Space>", sendMessage NextLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
+    ("M-<Tab>", BW.focusDown),
+    ("M-S-<Tab>", BW.focusUp),
+    ("M-j", BW.focusDown),
+    ("M-k", BW.focusUp),
+    ("M-m", BW.focusMaster),
+    ("M-S-j", BW.swapDown),
+    ("M-S-k", BW.swapUp),
+    ("M-C-m", withFocused minimizeWindow),
+    ("M-C-S-m", withLastMinimized maximizeWindow)
   ]
 
 delKeysP =
@@ -138,21 +163,21 @@ addKeys =
 
 main :: IO ()
 main = do
-  safeSpawn "mkfifo" ["/tmp/xmonad-polybar"]
-  handle <- spawnPipe "stdbuf -i 0 tee /tmp/xmonad-polybar"
   colors <- loadColors
-  xmonad . ewmhFullscreen . ewmh . docks $
-    def
-      { modMask = myModMask,
-        normalBorderColor = colors !! 1,
-        focusedBorderColor = colors !! 5,
-        terminal = "alacritty",
-        workspaces = ["home", "web", "dev", "music", "games"],
-        startupHook = myStartupHook,
-        manageHook = myManageHook,
-        layoutHook = myLayoutHook,
-        logHook = myPP handle
-      }
-      `additionalKeysP` addKeysP
-      `removeKeysP` delKeysP
-      `additionalKeys` addKeys
+  notifClient <- N.connectSession
+  xmonad $
+    ewmhFullscreen . ewmh . docks $
+      def
+        { modMask = myModMask,
+          normalBorderColor = colors !! 1,
+          focusedBorderColor = colors !! 5,
+          terminal = "alacritty",
+          workspaces = ["home", "web", "dev", "music", "games"],
+          startupHook = myStartupHook,
+          manageHook = myManageHook,
+          layoutHook = myLayoutHook,
+          handleEventHook = myHandleEventHook
+        }
+        `additionalKeysP` addKeysP notifClient
+        `removeKeysP` delKeysP
+        `additionalKeys` addKeys
