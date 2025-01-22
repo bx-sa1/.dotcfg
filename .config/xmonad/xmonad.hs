@@ -28,6 +28,7 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.SimpleDecoration
 import XMonad.Layout.Spacing
 import XMonad.Layout.StackTile
+import XMonad.Layout.Simplest
 import XMonad.Layout.Tabbed
 import XMonad.Layout.TrackFloating
 import XMonad.Layout.TwoPane
@@ -69,8 +70,9 @@ myLayoutHook =
               BW.boringWindows $
                 ifmax ||| Full
   where
-    ifmax = IfMax 1 Full (tiled ||| Mirror tiled)
-    tiled = combineTwo (TwoPane delta ratio) (simpleTabbed) (Column 1.0)
+    ifmax = IfMax 1 Full (tiled ||| simpleTiled ||| Mirror simpleTiled)
+    tiled = combineTwo (TwoPane delta ratio) (Simplest) (Column 1.0)
+    simpleTiled = Tall nmaster delta ratio
     nmaster = 1 -- Default number of windows in the master pane
     ratio = 1 / 2 -- Default proportion of screen occupied by master pane
     delta = 3 / 100 -- Percent of screen to increment by when resizing panes

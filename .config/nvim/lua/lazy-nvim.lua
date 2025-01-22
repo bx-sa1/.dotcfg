@@ -71,6 +71,7 @@ require("lazy").setup({
         -- which-key
         {
             'folke/which-key.nvim',
+            preset = 'modern',
             event = 'VimEnter',
             opts = {
                 delay = 0,

@@ -18,3 +18,10 @@ map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
 map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 map("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
 map("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
+
+-- Buffers
+map("n", "[b", "<cmd>bp<cr>", { desc = "Previous Buffer" })
+map("n", "]b", "<cmd>bn<cr>", { desc = "Next Buffer" })
+
+map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
+map("n", "<leader>m", "<cmd>mksession!<cr>", { desc = "[M]ake Session file in cwd" })
