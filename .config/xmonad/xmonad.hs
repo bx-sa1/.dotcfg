@@ -70,8 +70,8 @@ myLayoutHook =
               BW.boringWindows $
                 ifmax ||| Full
   where
-    ifmax = IfMax 1 Full (tiled ||| simpleTiled ||| Mirror simpleTiled)
-    tiled = combineTwo (TwoPane delta ratio) (Simplest) (Column 1.0)
+    ifmax = IfMax 1 Full ( simpleTiled ||| Mirror simpleTiled ||| stackTiled)
+    stackTiled = combineTwo (TwoPane delta ratio) (Simplest) (Column 1.0)
     simpleTiled = Tall nmaster delta ratio
     nmaster = 1 -- Default number of windows in the master pane
     ratio = 1 / 2 -- Default proportion of screen occupied by master pane
