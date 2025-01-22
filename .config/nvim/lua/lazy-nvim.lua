@@ -55,7 +55,9 @@ require("lazy").setup({
             version = '*',
             config = function()
                 -- mini.completion
-                require('mini.completion').setup()
+                require('mini.completion').setup({
+                    fallback_action = "<C-x><C-o>",
+                })
 
                 -- mini.pairs
                 require('mini.pairs').setup()

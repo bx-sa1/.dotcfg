@@ -20,6 +20,7 @@ import XMonad.Layout.BoringWindows qualified as BW
 import XMonad.Layout.Column
 import XMonad.Layout.Combo
 import XMonad.Layout.Dishes
+import XMonad.Layout.DragPane
 import XMonad.Layout.FocusTracking
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.IfMax
@@ -70,9 +71,9 @@ myLayoutHook =
               BW.boringWindows $
                 ifmax ||| Full
   where
-    ifmax = IfMax 1 Full ( simpleTiled ||| Mirror simpleTiled ||| stackTiled)
-    stackTiled = combineTwo (TwoPane delta ratio) (Simplest) (Column 1.0)
-    simpleTiled = Tall nmaster delta ratio
+    ifmax = IfMax 1 Full (tiled ||| Mirror tiled ||| twoPane ||| Mirror twoPane)
+    twoPane = TwoPane delta ratio
+    tiled = Tall nmaster delta ratio
     nmaster = 1 -- Default number of windows in the master pane
     ratio = 1 / 2 -- Default proportion of screen occupied by master pane
     delta = 3 / 100 -- Percent of screen to increment by when resizing panes
