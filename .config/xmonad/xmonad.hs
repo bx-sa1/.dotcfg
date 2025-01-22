@@ -108,7 +108,7 @@ myManageHook =
     composedManageHook =
       composeOne . concat $
         [ [title =? "Picture-in-Picture" -?> doFloat],
-          [className =? c -?> doShift w | (c, w) <- cShifts],
+          [className =? c -?> doF (W.shift w) | (c, w) <- cShifts],
           [className =? c -?> doFloat | c <- cFloats],
           [checkDock -?> doRaise],
           [isNotification -?> doIgnore <+> doRaise],
