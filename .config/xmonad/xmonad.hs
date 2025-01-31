@@ -60,6 +60,7 @@ myModMask = mod4Mask
 
 myStartupHook = do
   spawnOnce "picom -b"
+  spawnOnce "xsetroot -cursor_name left_ptr"
 
 myLayoutHook =
   windowNavigation $
