@@ -56,7 +56,7 @@ require("lazy").setup({
             config = function()
                 -- mini.completion
                 require('mini.completion').setup({
-                    fallback_action = "<C-x><C-o>",
+                    fallback_action = "<C-x><C-n>",
                 })
 
                 -- mini.pairs
@@ -79,7 +79,7 @@ require("lazy").setup({
                 delay = 0,
                 spec = {
                     { '<leader>s', group = '[S]earch' },
-                    { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+                    { '<leader>c', group = '[C]ode',    mode = { 'n', 'x' } },
                     { '<leader>w', group = '[W]indows', proxy = '<C-w>', },
 
 
@@ -113,6 +113,7 @@ require("lazy").setup({
                         map('<leader>cw', function() fzf.lsp_dynamic_workspace_symbols() end, '[W]orkspace Symbols')
                         map('<leader>cr', vim.lsp.buf.rename, '[R]ename')
                         map('<leader>ca', vim.lsp.buf.code_action, 'Code [A]ction', { 'n', 'x' })
+                        map("<leader>cf", function() vim.lsp.buf.format({ async = true }) end, "[F]ormat buffer")
                     end
                 })
 

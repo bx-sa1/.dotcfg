@@ -48,7 +48,19 @@ function music2vid {
 }
 
 function scrrec-start {
-  gpu-screen-recorder -w screen -f 60 -a "$(pactl get-default-sink).monitor" -a "$(pactl get-default-source)" -c mp4 -o "$HOME/Videos/Recordings/"
+    while [[ $# -gt 0 ]]; do
+        case "$@" in
+            -m)
+                MIC="-a $(pactl get-default-source)"
+                shift
+                ;;
+            *)
+                echo "Not an arg"
+                exit
+                ;;
+        esac
+    done
+    gpu-screen-recorder -w screen -f 60 -a "$(pactl get-default-sink).monitor" $(MIC) -c mp4 -o "$HOME/Videos/Recordings/$(date +%Y-%m-%d_%H-%M-%S).mp4"
 }
 
 function scrrec-stop {
