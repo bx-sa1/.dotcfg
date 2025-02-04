@@ -10,8 +10,6 @@ source ~/.cache/wal/colors-tty.sh
 
 set -o vi
 
-todo.sh ls
-
 alias ls='ls --color=auto -la'
 alias grep='grep --color=auto'
 alias rip_sample='yt-dlp -x -P ~/Music/prod/SAMPLES/my-samples'
@@ -21,6 +19,9 @@ alias workout-log="nvim ~/Documents/journals/workout-log.csv"
 alias t="todo.sh -t"
 alias sudo="sudo -E -s"
 alias vim="nvim"
+alias eb="emacs -batch -l ~/.config/emacs/init.el -eval"
+
+eb '(org-batch-agenda "t")'
 
 function reload-vim {
   vim -S "Session.vim"

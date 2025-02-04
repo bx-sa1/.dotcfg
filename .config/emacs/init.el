@@ -3,6 +3,7 @@
 (tool-bar-mode -1)
 (setq inhibit-splash-screen t)
 (transient-mark-mode 1)
+(setq backup-directory-alist '(("." . "~/.cache/emacs")))
 
 ;;; Set up the package manager
 
@@ -30,9 +31,18 @@
 ;;; org-mode
 (use-package org
   :ensure t
+  :bind (("C-c l" . #'org-store-link)
+	 ("C-c a" . #'org-agenda)
+	 ("C-c c" . #'org-capture)) 
   :config
-  (setq org-directory "~/Documents/notes"))
+  (setq org-directory "~/Documents/notes")
+  (setq org-log-done 'time))
 
+;; which-key
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
 
 
 
@@ -58,7 +68,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files '("~/Documents/notes/todo.org"))
+ '(custom-safe-themes
+   '("e5494adf200eeff1505839672150dde6053e086869189c381b1ce9b792dda3a8" default))
+ '(org-agenda-files
+   '("~/Documents/assignments/FYP/fyp.org" "/home/baba/Documents/notes/todo.org"))
  '(package-selected-packages '(evil)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
