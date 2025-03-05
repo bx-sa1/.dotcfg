@@ -139,6 +139,7 @@ addKeysP client =
     ("M-C-S-k", sendMessage $ Move U),
     ("M-C-S-l", sendMessage $ Move R),
     ("M-<Space>", sendMessage NextLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
+    ("M-S-<Space>", sendMessage FirstLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
     ("M-<Tab>", BW.focusDown),
     ("M-S-<Tab>", BW.focusUp),
     ("M-j", BW.focusDown),

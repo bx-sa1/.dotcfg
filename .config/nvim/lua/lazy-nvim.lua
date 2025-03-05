@@ -114,6 +114,7 @@ require("lazy").setup({
                         map('<leader>cr', vim.lsp.buf.rename, '[R]ename')
                         map('<leader>ca', vim.lsp.buf.code_action, 'Code [A]ction', { 'n', 'x' })
                         map("<leader>cf", function() vim.lsp.buf.format({ async = true }) end, "[F]ormat buffer")
+                        map("<leader>cD", function() fzf.lsp_workspace_diagnostics() end, "Workspace [D]iagnostics")
                     end
                 })
 

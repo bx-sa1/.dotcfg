@@ -32,8 +32,19 @@ function xmonadcfg {
 }
 
 function notes {
-  file="${1:-QuickNotes}"
-  nvim "$HOME/Documents/notes/$file.md"
+    notes_dir="$HOME/Documents/notes"
+    if [ "$#" -eq 0 ]; then
+        emacs -nw "$notes_dir/QuickNotes.org"
+    else
+        case "$1" in
+        ls) 
+            ls "$notes_dir"
+            ;;
+        *) 
+            emacs -nw "$notes_dir/$1.org"
+            ;;
+        esac
+    fi
 }
 
 function mkdircd {

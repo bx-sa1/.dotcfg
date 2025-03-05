@@ -4,6 +4,7 @@
 (setq inhibit-splash-screen t)
 (transient-mark-mode 1)
 (setq backup-directory-alist '(("." . "~/.cache/emacs")))
+(global-display-line-numbers-mode)
 
 ;;; Set up the package manager
 
@@ -71,7 +72,7 @@
  '(custom-safe-themes
    '("e5494adf200eeff1505839672150dde6053e086869189c381b1ce9b792dda3a8" default))
  '(org-agenda-files
-   '("~/Documents/assignments/FYP/fyp.org" "/home/baba/Documents/notes/todo.org"))
+   '("/home/baba/Documents/notes/ee3637.org" "/home/baba/Documents/assignments/FYP/fyp.org" "/home/baba/Documents/notes/todo.org"))
  '(package-selected-packages '(evil)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
