@@ -4,8 +4,8 @@
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-export VISUAL=vim
-export EDITOR=vim
+export VISUAL=nvim
+export EDITOR=nvim
 export OBS_VKCAPTURE=1
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
