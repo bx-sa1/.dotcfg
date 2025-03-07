@@ -3,9 +3,12 @@
 (tool-bar-mode -1)
 (setq inhibit-splash-screen t)
 (transient-mark-mode 1)
-(load-theme 'xresources t)
 (setq backup-directory-alist '(("." . "~/.cache/emacs")))
 (global-display-line-numbers-mode)
+
+;;; theme
+(when (display-graphic-p)
+  (load-theme 'xresources t))
 
 ;;; Set up the package manager
 
