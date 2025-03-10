@@ -45,10 +45,11 @@ return {
                     },
                 },
                 -- Add clippy lints for Rust.
-                checkOnSave = {
-                    allFeatures = true,
+                checkOnSave = true,
+                check = {
                     command = "clippy",
-                    extraArgs = { "--no-deps" },
+                    extraArgs = {"--", "-W", "clippy::pedantic"},
+                    allTargets = true,
                 },
                 procMacro = {
                     enable = true,

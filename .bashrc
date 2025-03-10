@@ -88,10 +88,28 @@ function monero-mine {
 }
 
 function wal-set {
-  wp=$(feh -A 'echo %F;killall feh' ~/.local/share/wallpapers/)
-  wal-custom -i "$wp" $@
-  xmonad --recompile && xmonad --restart
-  spicetify apply
+    wal-custom -i "$@" \
+    && xmonad --recompile && xmonad --restart \
+    && spicetify apply
+}
+function walp {
+    source ~/.cache/wal/colors.sh
+    case "$1" in
+        set) 
+            shift
+            wp=$(feh -A 'echo %F;killall feh' ~/.local/share/wallpapers/)
+            wal-set "$wp" "$@"
+            ;;
+        reset)
+            shift
+            wp="$wallpaper"
+            wal-set "$wp" "$@"
+            ;;
+        *)
+            echo "Not a valid command"
+            ;;
+    esac
+  
 }
 
 source /usr/share/bash-completion/completions/git

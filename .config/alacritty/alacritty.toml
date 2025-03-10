@@ -1,9 +1,5 @@
-general.import = [
-  "~/.config/alacritty/themes/themes/gruvbox_dark.toml"
-]
-
 [window]
-opacity = 0.8
+opacity = 0.5
 
 [keyboard]
 bindings = [
@@ -11,7 +7,7 @@ bindings = [
 ]
 
 [font]
-size = 10.0
+size = 11.0
 
 [font.normal]
 family = "monospace"
