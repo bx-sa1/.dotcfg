@@ -15,8 +15,6 @@ alias grep='grep --color=auto'
 alias rip_sample='yt-dlp -x -P ~/Music/prod/SAMPLES/my-samples'
 alias dotcfg="git --git-dir=$HOME/.dotcfg/ --work-tree=$HOME"
 alias pls="expac -H M '%m\t%n' | sort -h"
-alias workout-log="nvim ~/Documents/journals/workout-log.csv"
-alias t="todo.sh -t"
 alias sudo="sudo -E -s"
 alias vim="nvim"
 alias eb="emacs -batch -l ~/.config/emacs/init.el -eval"
