@@ -57,26 +57,6 @@ function music2vid {
   ffmpeg -r 1 -loop 1 -i "$image" -i "$audio" -acodec copy -r 1 -shortest -vf "scale=1920:1080:force_original_aspect_ratio=1,pad=1920:1080:(( (ow - iw)/2 )):(( (oh - ih)/2 ))" -sws_flags lanczos out.avi
 }
 
-function scrrec-start {
-    while [[ $# -gt 0 ]]; do
-        case "$@" in
-            -m)
-                MIC="-a $(pactl get-default-source)"
-                shift
-                ;;
-            *)
-                echo "Not an arg"
-                exit
-                ;;
-        esac
-    done
-    gpu-screen-recorder -w screen -f 60 -a "$(pactl get-default-sink).monitor" $(MIC) -c mp4 -o "$HOME/Videos/Recordings/$(date +%Y-%m-%d_%H-%M-%S).mp4"
-}
-
-function scrrec-stop {
-  killall -SIGINT gpu-screen-recorder
-}
-
 function zephyr-mine {
   gamemoderun xmrig -o zeph-eu1.nanopool.org:10943 -u ZEPHYR2N48MYrdAPBa7ZZAS9Eqne54Wx1XDeFzrjQhHRNnqxte1drRof25vryHnq3MeH4QWPTDUfz9fnPo6qPcWj62cdQ6jWMnD5L --tls -k -a rx/0
 }
