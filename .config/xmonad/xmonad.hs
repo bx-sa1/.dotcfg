@@ -40,6 +40,9 @@ import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 
+reload :: X ()
+reload = spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi"
+
 sendNotif :: N.Client -> String -> IO ()
 sendNotif client str = do
   let note = N.blankNote {N.summary = "XMonad", N.body = Just $ N.Text str}
@@ -128,12 +131,13 @@ myPP =
 myHandleEventHook = minimizeEventHook
 
 addKeysP client =
-  [ ("M-w", kill),
+  [ ("M-q", io (sendNotif client "Reloading XMonad") >> reload),
+    ("M-w", kill),
     ("M-=", addWorkspacePrompt def),
     ("M--", removeWorkspace),
     ("M-s", windows copyToAll),
     ("M-S-s", killAllOtherCopies),
-    ("M-b", sendMessage ToggleStruts),
+    ("M-b", sendMessage ToggleStruts >> toggleScreenSpacingEnabled >> toggleWindowSpacingEnabled),
     ("M-C-S-h", sendMessage $ Move L),
     ("M-C-S-j", sendMessage $ Move D),
     ("M-C-S-k", sendMessage $ Move U),
