@@ -25,11 +25,14 @@ import XMonad.Layout.FocusTracking
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.IfMax
 import XMonad.Layout.Minimize
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Renamed
 import XMonad.Layout.SimpleDecoration
+import XMonad.Layout.Simplest
 import XMonad.Layout.Spacing
 import XMonad.Layout.StackTile
-import XMonad.Layout.Simplest
 import XMonad.Layout.Tabbed
 import XMonad.Layout.TrackFloating
 import XMonad.Layout.TwoPane
@@ -66,18 +69,30 @@ myStartupHook = do
   spawnOnce "xsetroot -cursor_name left_ptr"
 
 myLayoutHook =
-  windowNavigation $
-    focusTracking $
-      smartBorders $
-        avoidStruts $
-          smartSpacingWithEdge 10 $
-            minimize $
-              BW.boringWindows $
-                ifmax ||| Full
+  focusTracking $
+    smartBorders $
+      avoidStruts $
+        BW.boringWindows $
+          tall ||| twoPane ||| full
   where
-    ifmax = IfMax 1 Full (tiled ||| Mirror tiled ||| twoPane ||| Mirror twoPane)
-    twoPane = TwoPane delta ratio
-    tiled = Tall nmaster delta ratio
+    twoPane =
+      named "Full || TwoPane" $
+        IfMax 1 full $
+          mySpacing 10 $
+            myMinimize $
+              mkToggle (single MIRROR) $
+                TwoPane delta ratio
+    tall =
+      named "Full || Tall" $
+        IfMax 1 full $
+          mySpacing 10 $
+            myMinimize $
+              mkToggle (single MIRROR) $
+                Tall nmaster delta ratio
+    full = named "Full" Full
+
+    myMinimize = minimize
+    mySpacing = spacingWithEdge
     nmaster = 1 -- Default number of windows in the master pane
     ratio = 1 / 2 -- Default proportion of screen occupied by master pane
     delta = 3 / 100 -- Percent of screen to increment by when resizing panes
@@ -133,17 +148,14 @@ myHandleEventHook = minimizeEventHook
 addKeysP client =
   [ ("M-q", io (sendNotif client "Reloading XMonad") >> reload),
     ("M-w", kill),
-    ("M-=", addWorkspacePrompt def),
+    ("M-=", appendWorkspacePrompt def),
     ("M--", removeWorkspace),
     ("M-s", windows copyToAll),
     ("M-S-s", killAllOtherCopies),
     ("M-b", sendMessage ToggleStruts >> toggleScreenSpacingEnabled >> toggleWindowSpacingEnabled),
-    ("M-C-S-h", sendMessage $ Move L),
-    ("M-C-S-j", sendMessage $ Move D),
-    ("M-C-S-k", sendMessage $ Move U),
-    ("M-C-S-l", sendMessage $ Move R),
     ("M-<Space>", sendMessage NextLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
     ("M-S-<Space>", sendMessage FirstLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
+    ("M-C-<Space>", sendMessage (Toggle MIRROR) >> (dynamicLogString myPP >>= io . sendNotif client)),
     ("M-<Tab>", BW.focusDown),
     ("M-S-<Tab>", BW.focusUp),
     ("M-j", BW.focusDown),
