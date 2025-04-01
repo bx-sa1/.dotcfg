@@ -128,7 +128,14 @@ function walp {
 source /usr/share/bash-completion/completions/git
 __git_complete dotcfg __git_main
 
-PS1='[\u@\h \W]\$ '
+source /usr/share/git/completion/git-prompt.sh
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWUPSTREAM=1
+GIT_PS1_STATESEPARATOR="|"
+git_ps1_color() {
+    [[ $(git status -s 2> /dev/null) ]] && echo -e "\e[0;34m" || echo -e "\e[0;35m"
+}
+PS1='\[\e[0;31m\]\u@\[\e[0;32m\]\h \[\e[0;33m\]\W\[$(git_ps1_color)\]$(__git_ps1 " (%s)")\n\[\e[0;36m\]\$ \[\e[0m\]'
 
 [ -f "/home/baba/.ghcup/env" ] && . "/home/baba/.ghcup/env" # ghcup-env
 export PATH=$PATH:/home/baba/.spicetify
