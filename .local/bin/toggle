@@ -1,9 +1,0 @@
-#!/bin/sh
-if ! pgrep "$1" 
-then
-    echo Toggle on
-    "$@"&
-else
-    echo Toggle off
-    pkill "$1"
-fi
