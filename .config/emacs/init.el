@@ -74,9 +74,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("e5494adf200eeff1505839672150dde6053e086869189c381b1ce9b792dda3a8" default))
+   '("e5494adf200eeff1505839672150dde6053e086869189c381b1ce9b792dda3a8"
+     default))
  '(org-agenda-files
-   '("/home/baba/Documents/notes/ee3637.org" "/home/baba/Documents/assignments/FYP/fyp.org" "/home/baba/Documents/notes/todo.org"))
+   '("/home/baba/Documents/notes/ee3637.org"
+     "/home/baba/Documents/notes/todo.org"))
  '(package-selected-packages '(evil)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

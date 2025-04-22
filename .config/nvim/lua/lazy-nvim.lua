@@ -145,6 +145,7 @@ require("lazy").setup({
 
         -- import your plugins
         { import = "plugins" },
+        { import = "plugins.lang" },
     },
     -- automatically check for plugin updates
     checker = { enabled = true },
