@@ -38,18 +38,15 @@ return {
         settings = {
             ['rust-analyzer'] = {
                 cargo = {
-                    allFeatures = true,
-                    loadOutDirsFromCheck = true,
-                    buildScripts = {
-                        enable = true,
-                    },
+                    features = "all",
+                    allTargets = true,
+                    extraArgs = { "--all" }
                 },
                 -- Add clippy lints for Rust.
                 checkOnSave = true,
                 check = {
                     command = "clippy",
                     extraArgs = {"--", "-W", "clippy::pedantic"},
-                    allTargets = true,
                 },
                 procMacro = {
                     enable = true,
@@ -68,4 +65,16 @@ return {
     gopls = {},
     pyright = {},
     bashls = {},
+    html = {},
+    eslint = {
+        on_attach = function(client, bufnr)
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              buffer = bufnr,
+              command = "EslintFixAll",
+            })
+          end,
+    },
+    cssls = {},
+    jsonls = {},
+    zk = {},
 }

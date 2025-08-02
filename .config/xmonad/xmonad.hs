@@ -1,12 +1,17 @@
+module Main where
+
+import qualified Colors as C
 import Control.Exception.Base
-import DBus.Notify qualified as N
-import Data.Map qualified as M
+import qualified DBus.Notify as N
+import qualified Data.Map as M
 import System.Directory (getHomeDirectory)
 import System.FilePath ((</>))
 import XMonad
 import XMonad.Actions.CopyWindow (copy, copyToAll, killAllOtherCopies)
+import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.Minimize
+import XMonad.Actions.Navigation2D
 import XMonad.Actions.UpdateFocus
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -16,7 +21,9 @@ import XMonad.Hooks.Minimize
 import XMonad.Hooks.Place
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
-import XMonad.Layout.BoringWindows qualified as BW
+import XMonad.Hooks.InsertPosition
+import qualified XMonad.Layout.BinarySpacePartition as BSP
+import qualified XMonad.Layout.BoringWindows as BW
 import XMonad.Layout.Column
 import XMonad.Layout.Combo
 import XMonad.Layout.Dishes
@@ -38,10 +45,11 @@ import XMonad.Layout.TrackFloating
 import XMonad.Layout.TwoPane
 import XMonad.Layout.WindowNavigation
 import XMonad.StackSet (lookupWorkspace)
-import XMonad.StackSet qualified as W
+import qualified XMonad.StackSet as W
 import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
+import Data.Semigroup (All)
 
 reload :: X ()
 reload = spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi"
@@ -51,16 +59,6 @@ sendNotif client str = do
   let note = N.blankNote {N.summary = "XMonad", N.body = Just $ N.Text str}
   N.notify client note
   return ()
-
-loadColors :: IO [String]
-loadColors = do
-  home <- getHomeDirectory
-  let path = home </> ".cache/wal/colors"
-  file <- try $ readFile path :: IO (Either SomeException String)
-  let colors = case file of
-        Left e -> repeat "#222222"
-        Right f -> take 8 $ lines f
-  return colors
 
 myModMask = mod4Mask
 
@@ -73,30 +71,28 @@ myLayoutHook =
     smartBorders $
       avoidStruts $
         BW.boringWindows $
-          tall ||| twoPane ||| full
+          mkToggle (single MIRROR) $
+            bsp ||| twoPane ||| full
   where
+    bsp =
+      named "BSP" $
+        myMods BSP.emptyBSP
     twoPane =
-      named "Full || TwoPane" $
-        IfMax 1 full $
-          mySpacing 10 $
-            myMinimize $
-              mkToggle (single MIRROR) $
-                TwoPane delta ratio
+      named "TwoPane" $
+        myMods $
+          TwoPane delta ratio
     tall =
-      named "Full || Tall" $
-        IfMax 1 full $
-          mySpacing 10 $
-            myMinimize $
-              mkToggle (single MIRROR) $
-                Tall nmaster delta ratio
+      named "Tall" $
+        myMods $
+          Tall nmaster delta ratio
     full = named "Full" Full
 
-    myMinimize = minimize
-    mySpacing = spacingWithEdge
+    myMods = smartSpacingWithEdge 10 . minimize
     nmaster = 1 -- Default number of windows in the master pane
     ratio = 1 / 2 -- Default proportion of screen occupied by master pane
     delta = 3 / 100 -- Percent of screen to increment by when resizing panes
 
+myManageHook :: ManageHook
 myManageHook =
   placeHook (smart (0.5, 0.5))
     <> composedManageHook
@@ -118,33 +114,43 @@ myManageHook =
         "pavucontrol",
         "Anki",
         "Pcmanfm",
+        "Pcmanfm-qt",
         "Alacritty",
         "Thunar",
-        "zenity"
+        "zenity",
+        "kitty",
+        "org.wezfurlong.wezterm"
       ]
 
     isXfce = className ^? "Xfce4"
+    isLxqt = className ^? "lxqt"
+    isDesktop = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_DESKTOP"
 
     composedManageHook =
       composeOne . concat $
         [ [title =? "Picture-in-Picture" -?> doFloat],
           [className =? c -?> doF (W.shift w) | (c, w) <- cShifts],
           [className =? c -?> doFloat | c <- cFloats],
-          [checkDock -?> doRaise],
-          [isNotification -?> doIgnore <+> doRaise],
+          [isDesktop -?> doLower <+> doIgnore],
+          [checkDock -?> doRaise <+> doIgnore],
+          [isNotification -?> doRaise <+> doIgnore],
           [isDialog -?> doFloat],
           [isXfce -?> doFloat],
+          [isLxqt -?> doFloat],
           [willFloat -?> doFloat],
           [transience]
         ]
 
+myPP :: PP
 myPP =
   def
-    { ppOrder = \(_ : l : _ : _) -> [l]
+    { ppOrder = \(_ : l : _ : _ ) -> [l]
     }
 
+myHandleEventHook :: Event -> X All
 myHandleEventHook = minimizeEventHook
 
+addKeysP :: N.Client -> [(String, X ())]
 addKeysP client =
   [ ("M-q", io (sendNotif client "Reloading XMonad") >> reload),
     ("M-w", kill),
@@ -156,22 +162,44 @@ addKeysP client =
     ("M-<Space>", sendMessage NextLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
     ("M-S-<Space>", sendMessage FirstLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
     ("M-C-<Space>", sendMessage (Toggle MIRROR) >> (dynamicLogString myPP >>= io . sendNotif client)),
-    ("M-<Tab>", BW.focusDown),
-    ("M-S-<Tab>", BW.focusUp),
+    -- movement
+    ("M-<Tab>", nextWS),
+    ("M-S-<Tab>", prevWS),
+    ("M-C-<Tab>", toggleWS),
     ("M-j", BW.focusDown),
     ("M-k", BW.focusUp),
     ("M-m", BW.focusMaster),
     ("M-S-j", BW.swapDown),
     ("M-S-k", BW.swapUp),
+    ("M-C-j", sendMessage $ BSP.ExpandTowards D),
+    ("M-C-k", sendMessage $ BSP.ExpandTowards U),
+    ("M-C-h", sendMessage $ BSP.ExpandTowards L),
+    ("M-C-l", sendMessage $ BSP.ExpandTowards R),
+    ("M-C-S-j", sendMessage $ BSP.ShrinkFrom D),
+    ("M-C-S-k", sendMessage $ BSP.ShrinkFrom U),
+    ("M-C-S-h", sendMessage $ BSP.ShrinkFrom L),
+    ("M-C-S-l", sendMessage $ BSP.ShrinkFrom R),
+    ("M-o", sendMessage BSP.Rotate),
+    ("M-i", sendMessage BSP.Swap),
+    ("M-n", sendMessage BSP.FocusParent),
+    ("M-S-n", sendMessage BSP.MoveNode),
+    ("M-C-n", sendMessage BSP.SelectNode),
+    ("M-M1-j", sendMessage $ BSP.SplitShift Prev),
+    ("M-M1-k", sendMessage $ BSP.SplitShift Next),
+    ("M-;", sendMessage BSP.Balance),
+    ("M-S-;", sendMessage BSP.Equalize),
+    -- minimize
     ("M-C-m", withFocused minimizeWindow),
     ("M-C-S-m", withLastMinimized maximizeWindow)
   ]
 
+delKeysP :: [String]
 delKeysP =
   [ "M-p",
     "M-S-c"
   ]
 
+addKeys :: [((KeyMask, KeySym), X ())]
 addKeys =
   [ ((myModMask .|. m, kc), withNthWorkspace f w)
     | (kc, w) <- zip ([xK_1 .. xK_9] ++ [xK_0]) [0 ..],
@@ -184,15 +212,15 @@ addKeys =
 
 main :: IO ()
 main = do
-  colors <- loadColors
   notifClient <- N.connectSession
   xmonad $
-    ewmhFullscreen . ewmh . docks $
+    docks . ewmh . ewmhFullscreen $
       def
         { modMask = myModMask,
-          normalBorderColor = colors !! 1,
-          focusedBorderColor = colors !! 5,
-          terminal = "alacritty",
+          normalBorderColor = C.color7,
+          focusedBorderColor = C.color8,
+          borderWidth = 2,
+          terminal = "xdg-terminal-exec",
           workspaces = ["home", "web", "dev", "music", "games"],
           startupHook = myStartupHook,
           manageHook = myManageHook,

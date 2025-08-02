@@ -1,0 +1,166 @@
+#!/usr/bin/env python
+
+import sys
+import subprocess
+import os
+import colorz
+import colorsys
+import pywal
+import hashlib
+import copy
+
+BG_DIR = f"{os.environ["HOME"]}/.local/share/wallpapers"
+BG_CACHE = f"{os.environ["HOME"]}/.cache/setbg/bg"
+
+def _lerp(a, b, t):
+    return (1-t) * a + t * b
+
+def _hexify(r, g, b):
+    return f"{int(r):0>2x}{int(g):0>2x}{int(b):0>2x}"
+
+def _slugify(s):
+    s = s.lower()
+    s  = ''.join(char if char.isalnum() else ' ' for char in s)
+    s = '-'.join(s.split())
+    return s
+
+def _checksum(imgfile):
+    checksum = hashlib.new("md5", usedforsecurity=False)
+    for chunk in iter(lambda: imgfile.read(4096), b""):
+        checksum.update(chunk)
+    return checksum.hexdigest()
+
+def _getbg():
+    findp = subprocess.Popen(["find", BG_DIR], stdout=subprocess.PIPE)
+    fzfp = subprocess.Popen(["fzf", "--preview", 'chafa -s ${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} {}'], stdin=findp.stdout, stdout=subprocess.PIPE)
+    findp.wait()
+    
+    if fzfp.wait() == 0 and fzfp.stdout != None:
+        return fzfp.stdout.readline().strip().decode()
+    else:
+        sys.exit(1)
+
+def _set_bg(bg):
+    if os.environ["XDG_CURRENT_DESKTOP"] == "LXQt" and subprocess.call(["which", "pcmanfm-qt"]) == 0:
+        subprocess.run(["pcmanfm-qt", "--set-wallpaper", bg, "wallpaper-mode", "fit"])
+    elif os.environ["XDG_CURRENT_DESKTOP"] == "XFCE" and subprocess.call(["which", "xfdesktop"]) == 0:
+        params = subprocess.run(
+            ["xfconf-query", "-c", "xfce4-desktop", "-l"], 
+            capture_output=True
+        ).stdout.decode('utf-8').splitlines()
+        for line in params:
+            if 'workspace0/last-image' in line:
+                subprocess.run(["xfconf-query", "-c", "xfce4-desktop", "-p", line, "-s", bg])
+    elif os.environ["XDG_CURRENT_DESKTOP"] == "MATE" and subprocess.call(["which", "gsettings"]) == 0:
+        subprocess.run(["gsettings", "set", "org.mate.background", "picture-filename", bg])
+    else:
+        subprocess.run(["feh", "--no-fehbg", "--bg-fill", bg])
+
+    with open(BG_CACHE, 'w') as cache:
+        cache.write(bg)
+
+def _gen_colorscheme(bg):
+    with open(bg, 'rb') as bgfile:
+        colors = [pair[0] for pair in colorz.colorz(bgfile, 8, 170, 200, 50)]
+        colors_hsv = [colorsys.rgb_to_hsv(r, g, b) for r, g, b in colors]
+        colors_hsv_sorted = sorted(colors_hsv, key=lambda x: x[2])
+        dh, ds, dv = colors_hsv_sorted[0]
+        dv = dv - dv * 0.8
+        lh, ls, lv = colors_hsv_sorted[-1]
+        lv = lv + lv * 0.2
+
+
+        base16_fgbg_hsv = [(_lerp(dh, lh, float(i)/7.0), _lerp(ds, ls, float(i)/7.0), _lerp(dv, lv, float(i)/7.0)) for i in range(0, 8)]
+        base16_hsv = base16_fgbg_hsv + colors_hsv_sorted
+        assert(len(base16_hsv) == 16)
+
+        base16 = [colorsys.hsv_to_rgb(h, s, v) for h, s, v in base16_hsv]
+        base16_hex = [_hexify(r, g, b) for r, g, b in base16]
+
+        return {
+            "checksum": _checksum(bgfile),
+            "wallpaper": bg,
+            "alpha": "100",
+            "special": {
+                "background": f"#{base16_hex[0]}",
+                "foreground": f"#{base16_hex[7]}",
+                "cursor": f"#{base16_hex[5]}"
+            },
+            "colors": {f"color{i}":f"#{c}" for i, c in enumerate(base16_hex)}
+        }
+
+def _save_colorscheme(name, colorscheme):
+    pywal.theme.save(colorscheme, name)
+
+def _check_wal(colorscheme_name):
+    for c in pywal.theme.list_themes_user():
+        if c.name == f"{colorscheme_name}.json":
+            return True
+    else:
+        return False
+
+def _colorscheme_for_term(colorscheme):
+    c = copy.deepcopy(colorscheme)
+    c["colors"]["color0"] = colorscheme["colors"]["color0"] # Black
+    c["colors"]["color1"] = colorscheme["colors"]["color8"] # Red
+    c["colors"]["color2"] = colorscheme["colors"]["color11"] # Green
+    c["colors"]["color3"] = colorscheme["colors"]["color10"] # Yellow
+    c["colors"]["color4"] = colorscheme["colors"]["color13"] # Blue 
+    c["colors"]["color5"] = colorscheme["colors"]["color14"] # Magenta
+    c["colors"]["color6"] = colorscheme["colors"]["color12"] # Cyan
+    c["colors"]["color7"] = colorscheme["colors"]["color5"] # White
+    c["colors"]["color8"] = colorscheme["colors"]["color2"] # Bright Black
+    for i in range(9, 16):
+        c["colors"][f"color{i}"] = c["colors"][f"color{i-8}"] # Bright Variants
+    return  c
+    
+
+def _apply_wal(colorscheme):
+    pywal.sequences.send(_colorscheme_for_term(colorscheme), vte_fix=True)
+    pywal.export.every(colorscheme)
+    pywal.reload.env()
+    hooks_path = os.path.join(pywal.settings.CONF_DIR, "hooks")
+    hooks = [os.path.join(dirpath, f) for (dirpath, _, filenames) in os.walk(hooks_path) for f in filenames]
+    for hook in hooks:
+        subprocess.run([f"{hook}"])
+
+
+def reset():
+    print(f"Reapplying theme...")
+    colorscheme = pywal.theme.file(os.path.join(pywal.settings.CACHE_DIR, "colors.json"))
+    _apply_wal(colorscheme)
+    _set_bg(colorscheme["wallpaper"])
+
+def set():
+    bg = _getbg()
+    colorscheme_name = f"setbg-{_slugify(os.path.basename(bg))}"
+
+    if _check_wal(colorscheme_name):
+        print(f"Reusing cached theme: {colorscheme_name}...")
+        colorscheme = pywal.theme.file(colorscheme_name)
+        _apply_wal(colorscheme)
+    else:
+        print("Creating new theme...")
+        colorscheme = _gen_colorscheme(bg)
+        _save_colorscheme(colorscheme_name, colorscheme)
+        _apply_wal(colorscheme)
+        # print("Colorscheme failed to create")
+        # sys.exit(1)
+
+    _set_bg(bg)
+
+args = iter(sys.argv[1:])
+arg = next(args, None)
+while arg is not None:
+    match arg:
+        case "reset":
+            reset()
+        case "set":
+            set()
+        case "theme":
+            pass
+        case "clean":
+            pass
+        case _:
+            print("Not a valid command")
+    arg = next(args, None)

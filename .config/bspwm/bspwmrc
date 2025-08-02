@@ -1,16 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
+source ~/.cache/wal/colors.sh
 xsetroot -cursor_name left_ptr
 if [[ "$1" -eq 0 ]]; then
-  sxhkd &
-  dunst &
-  picom -b
-  polybar &
-  /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-  nitrogen --restore &
-  dex -a -w &
+    sxhkd &
+    picom -b
 fi
-notify-send "Session load complete!"
 
 ########
 #CONFIG#
@@ -25,12 +20,12 @@ bspc config borderless_monocle true
 bspc config gapless_monocle true
 
 bspc config focus_follows_pointer true
-bspc config ignore_ewmh_focus true
+bspc config ignore_ewmh_focus false
 
-bspc config normal_border_color "#282A36"
-bspc config active_border_color "#44475A"
-bspc config focused_border_color "#44475A"
-bspc config presel_feedback_color "#BD93F9"
+bspc config normal_border_color "$color7"
+bspc config active_border_color "$color8"
+bspc config focused_border_color "$color9"
+bspc config presel_feedback_color "$color10"
 
 bspc desktop games -l monocle
 
@@ -38,20 +33,22 @@ bspc desktop games -l monocle
 #RULES#
 #######
 
-bspc rule -a polybar:Polybar manage=off
-
-bspc rule -a firefox desktop=web
-bspc rule -a steam desktop=games focus=off
-bspc rule -a Lutris desktop=games focus=off
-bspc rule -a Discord desktop=games focus=off
-bspc rule -a REAPER desktop=music focus=off
-bspc rule -a com.bitwig.BitwigStudio desktop=music focus=off
-bspc rule -a Qtractor desktop=music focus=off
-bspc rule -a Spotify desktop=music focus=off
+declare -A shifts
+shifts[firefox]="web"
+shifts[steam]="games"
+shifts[Lutris]="games"
+shifts[Discord]="games"
+shifts[REAPER]="music"
+shifts[com.bitwig.BitwigStudio]="music"
+shifts[Qtractor]="music"
+shifts[Spotify]="music"
+for key in "${!shifts[@]}"; do
+    bspc rule -a "$key" desktop="${shifts[$key]}"
+done 
 
 bspc rule -a Pcmanfm state=floating
 bspc rule -a Alacritty state=floating
 bspc rule -a Zenity state=floating
 bspc rule -a "steam:*:Friends List" state=floating
 
-bspc rule -a firefox:Toolkit:* state=floating sticky=on
+bspc rule -a firefox:Toolkit:Picture-in-Picture state=floating sticky=on

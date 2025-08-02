@@ -1,15 +1,22 @@
 local opt = vim.opt
 
-opt.number = true
 opt.mouse = 'a'
-opt.showmode = false
 vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
 end)
 opt.undofile = true
-opt.wrap = false
 opt.formatoptions = "jcroqlnt" -- tcqj
+
+-- appearance
+opt.smoothscroll = true
+opt.showmode = false
+opt.number = true
+opt.wrap = false
 opt.linebreak = true
+opt.signcolumn = "yes"
+opt.conceallevel = 2
+opt.list = true
+opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- search 
 opt.incsearch = true
