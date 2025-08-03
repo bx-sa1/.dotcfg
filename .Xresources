@@ -1,0 +1,12 @@
+XTerm.vt100.faceName: mono:size=10:antialias=true
+XTerm.vt100.font: 7x13
+XTerm.vt100.renderFont: true
+XTerm.vt100.locale: false
+XTerm.vt100.utf8: true
+XTerm.vt100.selectToClipboard: true
+XTerm*decTerminalID: vt340
+XTerm*numColorRegisters: 256
+
+Xcursor.theme: Bibata-Modern-Classic
+Xcursor.size: 22
+

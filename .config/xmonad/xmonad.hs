@@ -1,9 +1,13 @@
 module Main where
 
+import qualified Codec.Binary.UTF8.String as UTF8
 import qualified Colors as C
 import Control.Exception.Base
+import qualified DBus as D
+import qualified DBus.Client as D
 import qualified DBus.Notify as N
 import qualified Data.Map as M
+import Data.Semigroup (All)
 import System.Directory (getHomeDirectory)
 import System.FilePath ((</>))
 import XMonad
@@ -15,13 +19,13 @@ import XMonad.Actions.Navigation2D
 import XMonad.Actions.UpdateFocus
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.Minimize
 import XMonad.Hooks.Place
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
-import XMonad.Hooks.InsertPosition
 import qualified XMonad.Layout.BinarySpacePartition as BSP
 import qualified XMonad.Layout.BoringWindows as BW
 import XMonad.Layout.Column
@@ -49,7 +53,6 @@ import qualified XMonad.StackSet as W
 import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
-import Data.Semigroup (All)
 
 reload :: X ()
 reload = spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi"
@@ -141,10 +144,11 @@ myManageHook =
           [transience]
         ]
 
-myPP :: PP
-myPP =
+myPP :: D.Client -> PP
+myPP dbus =
   def
-    { ppOrder = \(_ : l : _ : _ ) -> [l]
+    { ppOrder = \(_ : l : _ : _) -> [l],
+      ppOutput = dbusOutput dbus
     }
 
 myHandleEventHook :: Event -> X All
@@ -159,9 +163,9 @@ addKeysP client =
     ("M-s", windows copyToAll),
     ("M-S-s", killAllOtherCopies),
     ("M-b", sendMessage ToggleStruts >> toggleScreenSpacingEnabled >> toggleWindowSpacingEnabled),
-    ("M-<Space>", sendMessage NextLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
-    ("M-S-<Space>", sendMessage FirstLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
-    ("M-C-<Space>", sendMessage (Toggle MIRROR) >> (dynamicLogString myPP >>= io . sendNotif client)),
+    -- ("M-<Space>", sendMessage NextLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
+    -- ("M-S-<Space>", sendMessage FirstLayout >> (dynamicLogString myPP >>= io . sendNotif client)),
+    -- ("M-C-<Space>", sendMessage (Toggle MIRROR) >> (dynamicLogString myPP >>= io . sendNotif client)),
     -- movement
     ("M-<Tab>", nextWS),
     ("M-S-<Tab>", prevWS),
@@ -210,9 +214,28 @@ addKeys =
            (f, m) <- [(W.view, mod1Mask), (W.shift, mod1Mask .|. shiftMask)]
        ]
 
+dbusOutput :: D.Client -> String -> IO ()
+dbusOutput dbus str = do
+  let signal =
+        (D.signal objectPath interfaceName memberName)
+          { D.signalBody = [D.toVariant $ UTF8.decodeString str]
+          }
+  D.emit dbus signal
+  where
+    objectPath = D.objectPath_ "/org/xmonad/Log"
+    interfaceName = D.interfaceName_ "org.xmonad.Log"
+    memberName = D.memberName_ "Update"
+
 main :: IO ()
 main = do
   notifClient <- N.connectSession
+  dbus <- D.connectSession
+
+  D.requestName
+    dbus
+    (D.busName_ "org.xmonad.Log")
+    [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+
   xmonad $
     docks . ewmh . ewmhFullscreen $
       def
@@ -225,7 +248,8 @@ main = do
           startupHook = myStartupHook,
           manageHook = myManageHook,
           layoutHook = myLayoutHook,
-          handleEventHook = myHandleEventHook
+          handleEventHook = myHandleEventHook,
+          logHook = dynamicLogWithPP $ myPP dbus
         }
         `additionalKeysP` addKeysP notifClient
         `removeKeysP` delKeysP
