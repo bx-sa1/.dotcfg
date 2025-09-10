@@ -28,31 +28,35 @@ function save_as_sample {
 }
 
 function reload-vim {
-  vim -S "Session.vim"
+    vim -S "Session.vim"
 }
 
 function xmonadcfg {
-  nvim "$HOME/.config/xmonad/xmonad.hs"
+    nvim "$HOME/.config/xmonad/xmonad.hs"
 }
 
 function mkdircd {
-  mkdir -p $@ && cd $@
+    mkdir -p "$@" && cd "$@" || return
+}
+
+function cdsc {
+    cd "$HOME/Music/prod/SUPERCOLLIDER/" || return
 }
 
 function music2vid {
-  random="$(find ~/Pictures/type-beat-bgs -type f | shuf -n 1 -)"
-  audio="$1"
-  image="${2:-$random}"
+    random="$(find ~/Pictures/type-beat-bgs -type f | shuf -n 1 -)"
+    audio="$1"
+    image="${2:-$random}"
 
-  ffmpeg -r 1 -loop 1 -i "$image" -i "$audio" -acodec copy -r 1 -shortest -vf "scale=1920:1080:force_original_aspect_ratio=1,pad=1920:1080:(( (ow - iw)/2 )):(( (oh - ih)/2 ))" -sws_flags lanczos out.avi
+    ffmpeg -r 1 -loop 1 -i "$image" -i "$audio" -acodec copy -r 1 -shortest -vf "scale=1920:1080:force_original_aspect_ratio=1,pad=1920:1080:(( (ow - iw)/2 )):(( (oh - ih)/2 ))" -sws_flags lanczos out.avi
 }
 
 function zephyr-mine {
-  gamemoderun xmrig -o zeph-eu1.nanopool.org:10943 -u ZEPHYR2N48MYrdAPBa7ZZAS9Eqne54Wx1XDeFzrjQhHRNnqxte1drRof25vryHnq3MeH4QWPTDUfz9fnPo6qPcWj62cdQ6jWMnD5L --tls -k -a rx/0
+    gamemoderun xmrig -o zeph-eu1.nanopool.org:10943 -u ZEPHYR2N48MYrdAPBa7ZZAS9Eqne54Wx1XDeFzrjQhHRNnqxte1drRof25vryHnq3MeH4QWPTDUfz9fnPo6qPcWj62cdQ6jWMnD5L --tls -k -a rx/0
 }
 
 function monero-mine {
-  sudo xmrig -o pool.hashvault.pro:80 -u 431RPBKtLqvS9dYHQpE71uezVrX3eZixeFvmSm4dLfp1SQio6ZiaTckGzpNbeXGm6XheRRDWc6xY6Aiqyt2otiKQA4Rw4Fk -p baba --tls --tls-fingerprint 420c7850e09b7c0bdcf748a7da9eb3647daf8515718f36d9ccfdd6b9ff834b14 -k -a rx/0
+    sudo xmrig -o pool.hashvault.pro:80 -u 431RPBKtLqvS9dYHQpE71uezVrX3eZixeFvmSm4dLfp1SQio6ZiaTckGzpNbeXGm6XheRRDWc6xY6Aiqyt2otiKQA4Rw4Fk -p baba --tls --tls-fingerprint 420c7850e09b7c0bdcf748a7da9eb3647daf8515718f36d9ccfdd6b9ff834b14 -k -a rx/0
 }
 
 source /usr/share/bash-completion/completions/git
@@ -63,7 +67,7 @@ GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUPSTREAM=1
 GIT_PS1_STATESEPARATOR="|"
 git_ps1_color() {
-    [[ $(git status -s 2> /dev/null) ]] && echo -e "\e[0;34m" || echo -e "\e[0;35m"
+    [[ $(git status -s 2>/dev/null) ]] && echo -e "\e[0;34m" || echo -e "\e[0;35m"
 }
 PS1='\[\e[0;33m\]\u@\[\e[0;33m\]\h \[\e[0;33m\]\W\[$(git_ps1_color)\]$(__git_ps1 " (%s)")\n\[\e[0;36m\]\$ \[\e[0m\]'
 
@@ -71,3 +75,17 @@ PS1='\[\e[0;33m\]\u@\[\e[0;33m\]\h \[\e[0;33m\]\W\[$(git_ps1_color)\]$(__git_ps1
 export PATH=$PATH:/home/baba/.spicetify
 [ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+case ":$PATH:" in
+*:/home/baba/.juliaup/bin:*) ;;
+
+*)
+    export PATH=/home/baba/.juliaup/bin${PATH:+:${PATH}}
+    ;;
+esac
+
+# <<< juliaup initialize <<<

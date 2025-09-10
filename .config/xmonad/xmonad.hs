@@ -190,8 +190,8 @@ addKeysP client =
     ("M-C-n", sendMessage BSP.SelectNode),
     ("M-M1-j", sendMessage $ BSP.SplitShift Prev),
     ("M-M1-k", sendMessage $ BSP.SplitShift Next),
-    ("M-;", sendMessage BSP.Balance),
-    ("M-S-;", sendMessage BSP.Equalize),
+    ("M-/", sendMessage BSP.Balance),
+    ("M-S-/", sendMessage BSP.Equalize),
     -- minimize
     ("M-C-m", withFocused minimizeWindow),
     ("M-C-S-m", withLastMinimized maximizeWindow)
@@ -199,8 +199,7 @@ addKeysP client =
 
 delKeysP :: [String]
 delKeysP =
-  [ "M-p",
-    "M-S-c"
+  [ "M-S-c"
   ]
 
 addKeys :: [((KeyMask, KeySym), X ())]

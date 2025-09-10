@@ -29,7 +29,26 @@ export PATH="$PATH:$npm_config_prefix/bin"
 
 export QSYS_ROOTDIR="/home/baba/.local/bin/intelFPGA_lite/22.1std/quartus/sopc_builder/bin"
 
-if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
-  exec startx $HOME/.xinitrc xfce -- -keeptty >~/.xorg.log 2>&1
-fi
+# >>> juliaup initialize >>>
 
+# !! Contents within this block are managed by juliaup !!
+
+case ":$PATH:" in
+*:/home/baba/.juliaup/bin:*) ;;
+
+*)
+    export PATH=/home/baba/.juliaup/bin${PATH:+:${PATH}}
+    ;;
+esac
+
+# <<< juliaup initialize <<<
+
+export PATH="$PATH:/home/baba/.cache/scalacli/local-repo/bin/scala-cli"
+
+# >>> coursier install directory >>>
+export PATH="$PATH:/home/baba/.local/share/coursier/bin"
+# <<< coursier install directory <<<
+
+if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
+    exec startx $HOME/.xinitrc xfce -- -keeptty >~/.xorg.log 2>&1
+fi
