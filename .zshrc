@@ -1,20 +1,8 @@
-#
-# ~/.bashrc
-#
-
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
-
 [[ -f "$HOME/.config/shellcfg/aliases.sh" ]] && source "$HOME/.config/shellcfg/aliases.sh"
 [[ -f "$HOME/.config/shellcfg/functions.sh" ]] && source "$HOME/.config/shellcfg/functions.sh"
 [[ -f "$HOME/.config/shellcfg/prompt.sh" ]] && source "$HOME/.config/shellcfg/prompt.sh"
 
-set -o vi
-
 (cat ~/.cache/wal/sequences &)
 source ~/.cache/wal/colors.sh
 
-source /usr/share/bash-completion/completions/git
-__git_complete dotcfg __git_main
-
-PS1='\[\e[0;33m\]\u@\[\e[0;33m\]\h \[\e[0;33m\]\W\[$(git_ps1_color)\]$(__git_ps1 " (%s)")\n\[\e[0;36m\]\$ \[\e[0m\]'
+PROMPT="%F{3}%n@%m %~ %{$(git_ps1_color)%}$(__git_ps1 '(%s)')"$'\n'"%F{6}%# %f"
