@@ -17,17 +17,17 @@ export npm_config_prefix="$HOME/.local/share/node"
 export QSYS_ROOTDIR="/home/baba/.local/bin/intelFPGA_lite/22.1std/quartus/sopc_builder/bin"
 
 PATH="\
-    /home/baba/.spicetify:\
-    /home/baba/.local/bin:\
-    /home/baba/.config/emacs/bin:\
-    /home/baba/.cargo/bin:\
-    $(go env GOBIN):\
-    $(go env GOPATH)/bin:\
-    $HOME/.cabal/bin:\
-    $HOME/.ghcup/bin:\
-    $(gem env user_gemhome)/bin:\
-    $npm_config_prefix/bin:\
-    $PATH"
+/home/baba/.spicetify:\
+/home/baba/.local/bin:\
+/home/baba/.config/emacs/bin:\
+/home/baba/.cargo/bin:\
+$(go env GOBIN):\
+$(go env GOPATH)/bin:\
+$HOME/.cabal/bin:\
+$HOME/.ghcup/bin:\
+$(gem env user_gemhome)/bin:\
+$npm_config_prefix/bin:\
+$PATH"
 export PATH
 
 # >>> juliaup initialize >>>
