@@ -2,7 +2,7 @@
 
 ## Installation
 ```bash
-$ git clone --bare <git-repo-url> $HOME/.dotfiles
+$ git clone --bare https://github.com/bx-sa1/.dotcfg $HOME/.dotfiles
 $ alias dotfiles='/usr/bin/git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME"'
 $ dotfiles checkout
 $ dotfiles config --local status.showUntrackedFiles no
