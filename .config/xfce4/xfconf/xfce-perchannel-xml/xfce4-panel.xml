@@ -1,0 +1,355 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<channel name="xfce4-panel" version="1.0">
+  <property name="configver" type="int" value="2"/>
+  <property name="panels" type="array">
+    <value type="int" value="1"/>
+    <value type="int" value="2"/>
+    <property name="dark-mode" type="bool" value="true"/>
+    <property name="panel-1" type="empty">
+      <property name="position" type="string" value="p=6;x=960;y=22"/>
+      <property name="length" type="double" value="100"/>
+      <property name="position-locked" type="bool" value="true"/>
+      <property name="icon-size" type="uint" value="22"/>
+      <property name="size" type="uint" value="28"/>
+      <property name="plugin-ids" type="array">
+        <value type="int" value="17"/>
+        <value type="int" value="5"/>
+        <value type="int" value="15"/>
+        <value type="int" value="18"/>
+        <value type="int" value="8"/>
+        <value type="int" value="24"/>
+        <value type="int" value="22"/>
+        <value type="int" value="25"/>
+        <value type="int" value="23"/>
+        <value type="int" value="26"/>
+        <value type="int" value="11"/>
+        <value type="int" value="9"/>
+        <value type="int" value="10"/>
+        <value type="int" value="20"/>
+        <value type="int" value="3"/>
+        <value type="int" value="19"/>
+      </property>
+      <property name="leave-opacity" type="uint" value="85"/>
+      <property name="enter-opacity" type="uint" value="85"/>
+      <property name="nrows" type="uint" value="1"/>
+      <property name="enable-struts" type="bool" value="true"/>
+      <property name="autohide-behavior" type="uint" value="0"/>
+      <property name="mode" type="uint" value="0"/>
+      <property name="length-adjust" type="bool" value="true"/>
+      <property name="background-style" type="uint" value="0"/>
+      <property name="background-rgba" type="array">
+        <value type="double" value="0.12156862745098039"/>
+        <value type="double" value="0.12156862745098039"/>
+        <value type="double" value="0.12156862745098039"/>
+        <value type="double" value="0.80000000000000004"/>
+      </property>
+      <property name="border-width" type="uint" value="4"/>
+    </property>
+    <property name="panel-2" type="empty">
+      <property name="position" type="string" value="p=10;x=961;y=1054"/>
+      <property name="size" type="uint" value="28"/>
+      <property name="length" type="double" value="100"/>
+      <property name="plugin-ids" type="array">
+        <value type="int" value="4"/>
+        <value type="int" value="6"/>
+        <value type="int" value="1"/>
+      </property>
+      <property name="position-locked" type="bool" value="true"/>
+    </property>
+  </property>
+  <property name="plugins" type="empty">
+    <property name="clipman" type="empty">
+      <property name="settings" type="empty">
+        <property name="show-qr-code" type="bool" value="false"/>
+        <property name="enable-actions" type="bool" value="true"/>
+      </property>
+      <property name="tweaks" type="empty">
+        <property name="popup-at-pointer" type="bool" value="false"/>
+      </property>
+    </property>
+    <property name="plugin-3" type="string" value="clock">
+      <property name="digital-layout" type="uint" value="2"/>
+      <property name="digital-date-font" type="string" value="Sans 10"/>
+      <property name="digital-time-font" type="string" value="Sans 14"/>
+      <property name="digital-date-format" type="string" value="%a %d %b %H:%M"/>
+      <property name="mode" type="uint" value="2"/>
+    </property>
+    <property name="plugin-9" type="string" value="notification-plugin"/>
+    <property name="plugin-10" type="string" value="pulseaudio">
+      <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
+      <property name="play-sound" type="bool" value="true"/>
+      <property name="known-players" type="string" value="Chromium;firefox;org.fooyin.fooyin;org.strawberrymusicplayer.strawberry;spotify;waterfox"/>
+      <property name="rec-indicator-persistent" type="bool" value="false"/>
+      <property name="enable-wnck" type="bool" value="true"/>
+    </property>
+    <property name="plugin-11" type="string" value="systray">
+      <property name="known-legacy-items" type="array">
+        <value type="string" value="lutris"/>
+        <value type="string" value="scim-panel-gtk"/>
+        <value type="string" value="network"/>
+        <value type="string" value="parcellite"/>
+        <value type="string" value="sc-controller"/>
+        <value type="string" value="clipman"/>
+        <value type="string" value="yad"/>
+        <value type="string" value="redshift-gtk"/>
+        <value type="string" value="gpick"/>
+        <value type="string" value="hexchat"/>
+        <value type="string" value="steam"/>
+        <value type="string" value="caffeine"/>
+        <value type="string" value="networkmanager applet"/>
+        <value type="string" value="fcitx5 tray window"/>
+        <value type="string" value="ethernet network connection “wired connection 1” active"/>
+        <value type="string" value="xfce4-power-manager"/>
+      </property>
+      <property name="known-items" type="array">
+        <value type="string" value="5bK36gbUvE"/>
+        <value type="string" value="LtFLnAAxDp"/>
+        <value type="string" value="equKhvF26r"/>
+        <value type="string" value="1EpUhRR2pF"/>
+        <value type="string" value="iq7lFoHxKM"/>
+        <value type="string" value="dHl_1e3rwx"/>
+        <value type="string" value="X72P2eM4v8"/>
+        <value type="string" value="H3F6_IPoFR"/>
+        <value type="string" value="UJugqSnLCL"/>
+        <value type="string" value="HCRyeu6xtF"/>
+        <value type="string" value="CnOQWLT4i1"/>
+        <value type="string" value="uydvluRrUU"/>
+        <value type="string" value="q9DxtPSXLf"/>
+        <value type="string" value="Dun3qtWS-N"/>
+        <value type="string" value="nm-tray"/>
+        <value type="string" value="nm-applet"/>
+        <value type="string" value="hUykQONzEE"/>
+        <value type="string" value="qI9z4qxd2S"/>
+        <value type="string" value="mRh9fvSsWY"/>
+        <value type="string" value="jnsdE9jhKu"/>
+        <value type="string" value="gEVCY4WX7A"/>
+        <value type="string" value="Strawberry"/>
+        <value type="string" value="pQA8bVELSM"/>
+        <value type="string" value="tRus6BDIzN"/>
+        <value type="string" value="hoNi9MRHRt"/>
+        <value type="string" value="JMlR1-hGrG"/>
+        <value type="string" value="AV-aVgAtfD"/>
+        <value type="string" value="87NVSBiKQj"/>
+        <value type="string" value="org.nicotine_plus.Nicotine"/>
+        <value type="string" value="xIUv-Rw2vX"/>
+        <value type="string" value="IR1KxVisk3"/>
+        <value type="string" value="Lcr47Xphxs"/>
+        <value type="string" value="vRjaWq1p8c"/>
+        <value type="string" value="zUvtQk3pyy"/>
+        <value type="string" value="KPb_Kgb5sW"/>
+        <value type="string" value="LyLVd66ddi"/>
+        <value type="string" value="obs"/>
+        <value type="string" value="_JCqO-J4T7"/>
+        <value type="string" value="gjj3RQFSxL"/>
+        <value type="string" value="-52JP9j-45"/>
+        <value type="string" value="4I_xBGmogv"/>
+        <value type="string" value="3KWEYETVic"/>
+        <value type="string" value="rhicpWF8ef"/>
+        <value type="string" value="antimicrox"/>
+        <value type="string" value="qBittorrent"/>
+        <value type="string" value="mLhkbwlxbt"/>
+        <value type="string" value="nKW8WFWrWr"/>
+        <value type="string" value="polychromatic-tray-applet"/>
+        <value type="string" value="24LGiiX9y7"/>
+        <value type="string" value="gVSYZ36_dS"/>
+        <value type="string" value="ulvLRI-OsZ"/>
+        <value type="string" value="csY1xm31dA"/>
+        <value type="string" value="RuhYQJkUQN"/>
+        <value type="string" value="HWm1ql7v7X"/>
+        <value type="string" value="mfG_Uho4tp"/>
+        <value type="string" value="MYivbIrodE"/>
+        <value type="string" value="qCUBFDpJJt"/>
+        <value type="string" value="sVWsWfmMWb"/>
+        <value type="string" value="ksnip"/>
+        <value type="string" value="dpugOnzFCP"/>
+        <value type="string" value="_rVmy_h4OF"/>
+        <value type="string" value="bDAXFy3zke"/>
+        <value type="string" value="HOfObHSFDW"/>
+        <value type="string" value="4UtyEzaZ1o"/>
+        <value type="string" value="HJTFKGT4ao"/>
+        <value type="string" value="spotify-client"/>
+        <value type="string" value="P2yTFptGvZ"/>
+        <value type="string" value="F39A1wkPTX"/>
+        <value type="string" value="caffeine"/>
+        <value type="string" value="WMFfT3U1Lo"/>
+        <value type="string" value="cbYBlbMfKb"/>
+        <value type="string" value="net.lutris.Lutris"/>
+        <value type="string" value="qpwgraph"/>
+        <value type="string" value="steam"/>
+        <value type="string" value="chrome_status_icon_1"/>
+        <value type="string" value="Fcitx"/>
+        <value type="string" value="firewall-applet"/>
+        <value type="string" value="redshift"/>
+        <value type="string" value="3KiwPyqyh5"/>
+      </property>
+      <property name="square-icons" type="bool" value="true"/>
+      <property name="hide-new-items" type="bool" value="true"/>
+      <property name="hidden-legacy-items" type="array">
+        <value type="string" value="caffeine"/>
+        <value type="string" value="scim-panel-gtk"/>
+        <value type="string" value="gpick"/>
+        <value type="string" value="networkmanager applet"/>
+        <value type="string" value="clipman"/>
+        <value type="string" value="redshift-gtk"/>
+        <value type="string" value="steam"/>
+        <value type="string" value="fcitx5 tray window"/>
+        <value type="string" value="lutris"/>
+        <value type="string" value="yad"/>
+        <value type="string" value="hexchat"/>
+        <value type="string" value="sc-controller"/>
+        <value type="string" value="parcellite"/>
+        <value type="string" value="network"/>
+      </property>
+      <property name="hidden-items" type="array">
+        <value type="string" value="-52JP9j-45"/>
+        <value type="string" value="HWm1ql7v7X"/>
+        <value type="string" value="3KWEYETVic"/>
+        <value type="string" value="csY1xm31dA"/>
+        <value type="string" value="Strawberry"/>
+        <value type="string" value="KPb_Kgb5sW"/>
+        <value type="string" value="5bK36gbUvE"/>
+        <value type="string" value="CnOQWLT4i1"/>
+        <value type="string" value="sVWsWfmMWb"/>
+        <value type="string" value="Lcr47Xphxs"/>
+        <value type="string" value="tRus6BDIzN"/>
+        <value type="string" value="WMFfT3U1Lo"/>
+        <value type="string" value="RuhYQJkUQN"/>
+        <value type="string" value="_JCqO-J4T7"/>
+        <value type="string" value="vRjaWq1p8c"/>
+        <value type="string" value="dpugOnzFCP"/>
+        <value type="string" value="xIUv-Rw2vX"/>
+        <value type="string" value="IR1KxVisk3"/>
+        <value type="string" value="F39A1wkPTX"/>
+        <value type="string" value="24LGiiX9y7"/>
+        <value type="string" value="cbYBlbMfKb"/>
+        <value type="string" value="HOfObHSFDW"/>
+        <value type="string" value="nm-applet"/>
+        <value type="string" value="antimicrox"/>
+        <value type="string" value="HJTFKGT4ao"/>
+        <value type="string" value="jnsdE9jhKu"/>
+        <value type="string" value="4I_xBGmogv"/>
+        <value type="string" value="spotify-client"/>
+        <value type="string" value="H3F6_IPoFR"/>
+        <value type="string" value="org.nicotine_plus.Nicotine"/>
+        <value type="string" value="hUykQONzEE"/>
+        <value type="string" value="UJugqSnLCL"/>
+        <value type="string" value="qpwgraph"/>
+        <value type="string" value="LtFLnAAxDp"/>
+        <value type="string" value="gjj3RQFSxL"/>
+        <value type="string" value="bDAXFy3zke"/>
+        <value type="string" value="q9DxtPSXLf"/>
+        <value type="string" value="HCRyeu6xtF"/>
+        <value type="string" value="JMlR1-hGrG"/>
+        <value type="string" value="qBittorrent"/>
+        <value type="string" value="nm-tray"/>
+        <value type="string" value="87NVSBiKQj"/>
+        <value type="string" value="ulvLRI-OsZ"/>
+        <value type="string" value="ksnip"/>
+        <value type="string" value="polychromatic-tray-applet"/>
+        <value type="string" value="qCUBFDpJJt"/>
+        <value type="string" value="obs"/>
+        <value type="string" value="Fcitx"/>
+        <value type="string" value="hoNi9MRHRt"/>
+        <value type="string" value="MYivbIrodE"/>
+        <value type="string" value="gVSYZ36_dS"/>
+        <value type="string" value="qI9z4qxd2S"/>
+        <value type="string" value="nKW8WFWrWr"/>
+        <value type="string" value="uydvluRrUU"/>
+        <value type="string" value="4UtyEzaZ1o"/>
+        <value type="string" value="rhicpWF8ef"/>
+        <value type="string" value="redshift"/>
+        <value type="string" value="steam"/>
+        <value type="string" value="chrome_status_icon_1"/>
+        <value type="string" value="P2yTFptGvZ"/>
+        <value type="string" value="3KiwPyqyh5"/>
+        <value type="string" value="zUvtQk3pyy"/>
+        <value type="string" value="LyLVd66ddi"/>
+        <value type="string" value="pQA8bVELSM"/>
+        <value type="string" value="iq7lFoHxKM"/>
+        <value type="string" value="dHl_1e3rwx"/>
+        <value type="string" value="firewall-applet"/>
+        <value type="string" value="mLhkbwlxbt"/>
+        <value type="string" value="equKhvF26r"/>
+        <value type="string" value="caffeine"/>
+        <value type="string" value="mfG_Uho4tp"/>
+        <value type="string" value="_rVmy_h4OF"/>
+        <value type="string" value="1EpUhRR2pF"/>
+        <value type="string" value="AV-aVgAtfD"/>
+        <value type="string" value="net.lutris.Lutris"/>
+        <value type="string" value="X72P2eM4v8"/>
+        <value type="string" value="gEVCY4WX7A"/>
+        <value type="string" value="mRh9fvSsWY"/>
+        <value type="string" value="Dun3qtWS-N"/>
+      </property>
+      <property name="icon-size" type="int" value="0"/>
+      <property name="symbolic-icons" type="bool" value="false"/>
+    </property>
+    <property name="plugin-17" type="string" value="separator">
+      <property name="expand" type="bool" value="false"/>
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-18" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+      <property name="expand" type="bool" value="true"/>
+    </property>
+    <property name="plugin-19" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-20" type="string" value="power-manager-plugin"/>
+    <property name="plugin-22" type="string" value="genmon">
+      <property name="command" type="string" value="/home/baba/.local/bin/xfce4-genmon-mem.sh"/>
+      <property name="use-label" type="bool" value="true"/>
+      <property name="text" type="string" value="MEM:"/>
+      <property name="update-period" type="int" value="1000"/>
+      <property name="enable-single-row" type="bool" value="true"/>
+      <property name="font" type="string" value="Sans 10"/>
+    </property>
+    <property name="plugin-23" type="string" value="genmon">
+      <property name="command" type="string" value="/home/baba/.local/bin/xfce4-genmon-hdd.sh &quot;/home&quot;"/>
+      <property name="use-label" type="bool" value="true"/>
+      <property name="text" type="string" value="/home:"/>
+      <property name="update-period" type="int" value="1000"/>
+      <property name="enable-single-row" type="bool" value="true"/>
+      <property name="font" type="string" value="Sans 10"/>
+    </property>
+    <property name="plugin-24" type="string" value="separator">
+      <property name="style" type="uint" value="0"/>
+      <property name="expand" type="bool" value="false"/>
+    </property>
+    <property name="plugin-25" type="string" value="separator"/>
+    <property name="plugin-26" type="string" value="separator">
+      <property name="expand" type="bool" value="false"/>
+      <property name="style" type="uint" value="1"/>
+    </property>
+    <property name="plugin-5" type="string" value="applicationsmenu">
+      <property name="show-button-title" type="bool" value="true"/>
+      <property name="button-icon" type="string" value="archlinux-logo"/>
+      <property name="custom-menu" type="bool" value="false"/>
+      <property name="small" type="bool" value="false"/>
+      <property name="show-tooltips" type="bool" value="false"/>
+    </property>
+    <property name="plugin-8" type="string" value="genmon">
+      <property name="command" type="string" value="/home/baba/.local/bin/xfce4-genmon-cpu.sh"/>
+      <property name="use-label" type="bool" value="true"/>
+      <property name="text" type="string" value="CPU:"/>
+      <property name="update-period" type="int" value="1000"/>
+      <property name="enable-single-row" type="bool" value="true"/>
+      <property name="font" type="string" value="Sans 10"/>
+    </property>
+    <property name="plugin-1" type="string" value="pager">
+      <property name="rows" type="uint" value="1"/>
+      <property name="miniature-view" type="bool" value="false"/>
+    </property>
+    <property name="plugin-4" type="string" value="tasklist">
+      <property name="show-handle" type="bool" value="false"/>
+    </property>
+    <property name="plugin-6" type="string" value="separator">
+      <property name="expand" type="bool" value="true"/>
+      <property name="style" type="uint" value="0"/>
+    </property>
+    <property name="plugin-15" type="string" value="places">
+      <property name="show-button-type" type="int" value="1"/>
+    </property>
+  </property>
+</channel>

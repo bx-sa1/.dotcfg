@@ -2,6 +2,9 @@
 # bspwm hotkeys
 #
 
+super + Enter
+	xdg-terminal-exec
+
 # quit/restart bspwm
 super + alt + {r,q}
 	{bspc wm -r, quit_rofi}

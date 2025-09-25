@@ -40,10 +40,7 @@ XF86AudioPrev
     playerctl previous
 
 super + r
-   rofi -show combi -modes combi -combi-modes "window,drun,run" 
-
-super + Return
-    alacritty
+    rofi -modes "drun,run,window,web:$HOME/.config/rofi/scripts/web.sh" -show drun
 
 # make sxhkd reload its configuration files:
 super + Escape

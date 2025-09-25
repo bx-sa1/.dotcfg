@@ -10,7 +10,6 @@ import hashlib
 import copy
 
 BG_DIR = f"{os.environ["HOME"]}/.local/share/wallpapers"
-BG_CACHE = f"{os.environ["HOME"]}/.cache/setbg/bg"
 
 def _lerp(a, b, t):
     return (1-t) * a + t * b
@@ -39,25 +38,6 @@ def _getbg():
         return fzfp.stdout.readline().strip().decode()
     else:
         sys.exit(1)
-
-def _set_bg(bg):
-    if os.environ["XDG_CURRENT_DESKTOP"] == "LXQt" and subprocess.call(["which", "pcmanfm-qt"]) == 0:
-        subprocess.run(["pcmanfm-qt", "--set-wallpaper", bg, "wallpaper-mode", "fit"])
-    elif os.environ["XDG_CURRENT_DESKTOP"] == "XFCE" and subprocess.call(["which", "xfdesktop"]) == 0:
-        params = subprocess.run(
-            ["xfconf-query", "-c", "xfce4-desktop", "-l"], 
-            capture_output=True
-        ).stdout.decode('utf-8').splitlines()
-        for line in params:
-            if 'workspace0/last-image' in line:
-                subprocess.run(["xfconf-query", "-c", "xfce4-desktop", "-p", line, "-s", bg])
-    elif os.environ["XDG_CURRENT_DESKTOP"] == "MATE" and subprocess.call(["which", "gsettings"]) == 0:
-        subprocess.run(["gsettings", "set", "org.mate.background", "picture-filename", bg])
-    else:
-        subprocess.run(["feh", "--no-fehbg", "--bg-fill", bg])
-
-    with open(BG_CACHE, 'w') as cache:
-        cache.write(bg)
 
 def _gen_colorscheme(bg):
     with open(bg, 'rb') as bgfile:
@@ -129,7 +109,7 @@ def reset():
     print(f"Reapplying theme...")
     colorscheme = pywal.theme.file(os.path.join(pywal.settings.CACHE_DIR, "colors.json"))
     _apply_wal(colorscheme)
-    _set_bg(colorscheme["wallpaper"])
+    pywal.wallpaper.change(colorscheme["wallpaper"])
 
 def set():
     bg = _getbg()
@@ -147,7 +127,7 @@ def set():
         # print("Colorscheme failed to create")
         # sys.exit(1)
 
-    _set_bg(bg)
+    pywal.wallpaper.change(bg)
 
 args = iter(sys.argv[1:])
 arg = next(args, None)

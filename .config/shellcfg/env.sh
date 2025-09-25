@@ -15,6 +15,7 @@ export GTK_MODULES="canberra-gtk-module:$GTK_MODULES"
 
 export npm_config_prefix="$HOME/.local/share/node"
 export QSYS_ROOTDIR="/home/baba/.local/bin/intelFPGA_lite/22.1std/quartus/sopc_builder/bin"
+export ANDROID_HOME="$HOME/.android-sdk"
 
 PATH="\
 /home/baba/.spicetify:\
@@ -27,6 +28,9 @@ $HOME/.cabal/bin:\
 $HOME/.ghcup/bin:\
 $(gem env user_gemhome)/bin:\
 $npm_config_prefix/bin:\
+$ANDROID_HOME/cmdline-tools/latest/bin:\
+$ANDROID_HOME/build-tools/36.1.0-rc1:\
+$ANDROID_HOME/platform-tools:\
 $PATH"
 export PATH
 
