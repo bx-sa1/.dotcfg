@@ -56,6 +56,8 @@
       </property>
       <property name="&lt;Primary&gt;F11" type="string" value="save-replay.sh"/>
       <property name="&lt;Primary&gt;&lt;Shift&gt;F11" type="string" value="toggle-replay-buffer.sh"/>
+      <property name="AudioRaiseVolume" type="string" value="amixer set Master 5%+"/>
+      <property name="AudioLowerVolume" type="string" value="amixer set Master 5%-"/>
     </property>
   </property>
   <property name="xfwm4" type="empty">

@@ -3,6 +3,10 @@
 
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
 
+export HISTFILE="$HOME/.sh_history"
+export SAVEHIST=60
+export HISTFILESIZE=60
+
 export VISUAL=nvim
 export EDITOR=nvim
 

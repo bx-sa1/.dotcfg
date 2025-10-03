@@ -2,6 +2,15 @@
 [[ -f "$HOME/.config/shellcfg/functions.sh" ]] && source "$HOME/.config/shellcfg/functions.sh"
 [[ -f "$HOME/.config/shellcfg/prompt.sh" ]] && source "$HOME/.config/shellcfg/prompt.sh"
 
+autoload -Uz compinit
+compinit
+
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+add-zsh-hook chpwd chpwd_recent_dirs
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*:*:cdr:*:*' menu selection
+
 (cat ~/.cache/wal/sequences &)
 source ~/.cache/wal/colors.sh
 
