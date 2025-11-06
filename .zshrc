@@ -1,6 +1,7 @@
-[[ -f "$HOME/.config/shellcfg/aliases.sh" ]] && source "$HOME/.config/shellcfg/aliases.sh"
-[[ -f "$HOME/.config/shellcfg/functions.sh" ]] && source "$HOME/.config/shellcfg/functions.sh"
-[[ -f "$HOME/.config/shellcfg/prompt.sh" ]] && source "$HOME/.config/shellcfg/prompt.sh"
+[[ -f ~/.aliases ]] && source ~/.aliases
+[[ -f ~/.functions ]] && source ~/.functions
+[[ -f ~/.prompt ]] && source ~/.prompt
+[[ -f ~/.colors ]] && source ~/.colors
 
 autoload -Uz compinit
 compinit
@@ -10,9 +11,6 @@ add-zsh-hook chpwd chpwd_recent_dirs
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*:*:cdr:*:*' menu selection
-
-(cat ~/.cache/wal/sequences &)
-source ~/.cache/wal/colors.sh
 
 setopt PROMPT_SUBST; PROMPT=$'%F{3}%n@%m %~%{$(git_ps1_color)%}$(__git_ps1 " (%s)")\n%F{6}%# %f'
 

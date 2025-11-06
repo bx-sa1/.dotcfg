@@ -1,2 +1,2 @@
-[[ -f "$HOME/.config/shellcfg/env.sh" ]] && source "$HOME/.config/shellcfg/env.sh"
+[[ -f ~/.env ]] && source ~/.env
 path=($path)

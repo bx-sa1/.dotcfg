@@ -129,6 +129,7 @@ def set():
 
     pywal.wallpaper.change(bg)
 
+
 args = iter(sys.argv[1:])
 arg = next(args, None)
 while arg is not None:

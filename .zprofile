@@ -1,1 +1,1 @@
-[[ -f "$HOME/.config/shellcfg/shelldm.sh" ]] && source "$HOME/.config/shellcfg/shelldm.sh"
+[[ -f ~/.shelldm ]] && source ~/.shelldm
