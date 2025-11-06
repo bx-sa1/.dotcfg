@@ -1,0 +1,2 @@
+#!/usr/bin/bash
+find "$HOME/.local/share/wallpapers/" | fzf --preview 'chafa -s "$FZF_PREVIEW_COLUMNSx$FZF_PREVIEW_LINES" {}'
