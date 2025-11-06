@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+
+function set() {
+    bg="$1"
+    b64_bg="$(echo -n "$bg" | base64)"
+    if flavours list "$b64_bg"; then
+        echo "Applying cached scheme."
+        flavours apply "$b64_bg"
+    else
+        echo "Generating new scheme."
+        if flavours generate --slug "$b64_bg" --name "$bg" dark "$bg"; then
+            echo "Applying new scheme."
+            flavours apply "$b64_bg"
+        else
+            echo "Not a background."
+            exit
+        fi
+    fi
+    changebg "$bg"
+}
+
+function changebg {
+    case "$XDG_CURRENT_DESKTOP" in
+    XFCE) xfconf-query -c xfce4-desktop -l | grep -E "/backdrop/.*/last-image" | xargs -I {} xfconf-query -c xfce4-desktop -p {} -s "$1" ;;
+    esac
+}
+
+case $1 in
+pick) set "$(wallpicker)" ;;
+reset) set $(flavours current | base64 -d) ;;
+*) echo "Unknown command" ;;
+esac
