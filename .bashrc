@@ -5,14 +5,13 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-[[ -f "$HOME/.config/shellcfg/aliases.sh" ]] && source "$HOME/.config/shellcfg/aliases.sh"
-[[ -f "$HOME/.config/shellcfg/functions.sh" ]] && source "$HOME/.config/shellcfg/functions.sh"
-[[ -f "$HOME/.config/shellcfg/prompt.sh" ]] && source "$HOME/.config/shellcfg/prompt.sh"
+[[ -f ~/.aliases ]] && source ~/.aliases
+[[ -f ~/.functions ]] && source ~/.functions
+[[ -f ~/.prompt ]] && source ~/.prompt
+[[ -f ~/.colors ]] && source ~/.colors
+[[ -f ~/.user ]] && source ~/.user
 
 set -o vi
-
-(cat ~/.cache/wal/sequences &)
-source ~/.cache/wal/colors.sh
 
 source /usr/share/bash-completion/completions/git
 __git_complete dotcfg __git_main
