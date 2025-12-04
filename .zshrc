@@ -2,6 +2,7 @@
 [[ -f ~/.functions ]] && source ~/.functions
 [[ -f ~/.prompt ]] && source ~/.prompt
 [[ -f ~/.colors ]] && source ~/.colors
+[[ -f ~/.user ]] && source ~/.user
 
 autoload -Uz compinit
 compinit

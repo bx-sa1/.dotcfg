@@ -82,7 +82,7 @@ rewrite = true
 file = "~/.colors"
 template = "shell"
 rewrite = true
-hook = "for t in /dev/pts/*; do source ~/.colors >t; done"
+hook = "for t in /dev/pts/*; do source ~/.colors > $t; done"
 
 [[items]]
 file = "~/.config/xmonad/Colors.hs"
