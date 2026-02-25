@@ -10,7 +10,7 @@ function reload-vim {
 }
 
 function xmonadcfg {
-    nvim "$HOME/.config/xmonad/xmonad.hs"
+    eval $VISUAL "$HOME/.config/xmonad/xmonad.hs"
 }
 
 function mkdircd {

@@ -1,3 +1,4 @@
+#!/bin/sh
 alias ls='ls --color=auto -la'
 alias grep='grep --color=auto'
 alias rip_sample='yt-dlp -x -P ~/Music/prod/SAMPLES/my-samples'

@@ -99,5 +99,5 @@ rewrite = true
 [[items]]
 file = "~/.config/qutebrowser/colors.py"
 template = "qutebrowser"
-hook = "qutebrowser :config-source"
+hook = "pidof qutebrowser && qutebrowser :config-source"
 rewrite = true

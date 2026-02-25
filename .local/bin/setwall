@@ -1,14 +1,30 @@
 #!/usr/bin/bash
 
-function set() {
+function enc_scheme_name {
     bg="$1"
-    b64_bg="$(echo -n "$bg" | base64)"
+    mode="$2"
+    echo "$bg\\_$mode" | base64
+}
+export -f enc_scheme_name
+
+function dec_scheme_name {
+    b64_bg="$1"
+    dec="$(echo "$b64_bg" | base64 -d)"
+    readarray -d "\\_" -t res <<<"$dec"
+    echo "${res[@]:0:2}"
+}
+export -f dec_scheme_name
+
+function set {
+    bg="$1"
+    mode="$2"
+    b64_bg="$(enc_scheme_name "$bg" "$mode")"
     if flavours list "$b64_bg"; then
         echo "Applying cached scheme."
         flavours apply "$b64_bg"
     else
         echo "Generating new scheme."
-        if flavours generate --slug "$b64_bg" --name "$bg" dark "$bg" >/dev/null; then
+        if flavours generate --slug "$b64_bg" --name "$bg" "$mode" "$bg" >/dev/null; then
             echo "Applying new scheme."
             flavours apply "$b64_bg"
         else
@@ -25,8 +41,41 @@ function changebg {
     esac
 }
 
+function pick {
+    mode="dark"
+    wp=$(wallpicker)
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+        -m | --mode)
+            mode=$2
+            shift
+            ;;
+        *)
+            echo "Unknown parameter: $1"
+            exit 1
+            ;;
+        esac
+        shift
+    done
+
+    set "$wp" "$mode"
+
+}
+
+function reset {
+    curr_wp="$(flavours current | xargs -I {} bash -c 'dec_scheme_name "$@"' _ {})"
+    set "$curr_wp"
+}
+
 case $1 in
-pick) set "$(wallpicker)" ;;
-reset) set "$(flavours current | base64 -d)" ;;
+pick)
+    shift
+    pick "$@"
+    ;;
+reset)
+    shift
+    reset
+    ;;
 *) echo "Unknown command" ;;
 esac
