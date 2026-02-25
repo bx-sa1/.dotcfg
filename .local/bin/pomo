@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+import sys
+import time
+import os
+
+running = false
+
+arg_rounds = 3
+arg_break = 5
+arg_work = 25
+
+current_state = 0
+rounds_done = 0
+elapsed = 0
+last_time = time.monotonic_ns()
+
+args = sys.argv
+arg = next(args, None)
+while arg is not None:
+    if arg == "-r" or arg == "--rounds":
+        arg = next(args, None)
+        arg_rounds = arg
+    elif args[0] == "-b" or args[0] == "--break":
+        arg = next(args, None)
+        arg_break = arg
+    elif args[0] == "-w" or args[0] == "--work":
+        arg = next(args, None)
+        arg_work = arg
+    else:
+        print("Unknown command")
+        os.exit(1)
+    arg = next(args, None)
+
+
+def change_state(state):
+    current_state = state
+    print(state, " time!")
+
+def get_time_left():
+    if current_state == "work":
+        time_left = (arg_work * 60 * 1000 * 1000) - elapsed
+    elif current_state == "break":
+        time_left = (arg_break * 60 * 1000 * 1000) - elapsed
+
+
+while current_state != "done":
+    now_time = time.monotonic_ns()
+    delta = now_time - last_time
+    elapsed += delta
