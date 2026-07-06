@@ -1,0 +1,53 @@
+shell = "sh -c '{}'"
+
+[[items]]
+name = "xresources"
+path = "https://github.com/tinted-theming/tinted-xresources"
+themes-dir = "xresources"
+hook = "xrdb -merge -quiet %f"
+
+[[items]]
+name = "json"
+path = "~/.config/tinted-theming/tinty/templates/json"
+themes-dir = "build"
+
+[[items]]
+path = "https://github.com/tinted-theming/tinted-vim"
+name = "vim"
+themes-dir = "colors"
+
+[[items]]
+path = "https://github.com/tinted-theming/base16-emacs"
+name = "emacs"
+themes-dir = "build"
+
+[[items]]
+path = "https://github.com/tinted-theming/base16-rofi"
+name = "tinted-rofi"
+themes-dir = "colors"
+hook = "cp -f %f ~/.config/rofi/colors.rasi"
+
+[[items]]
+name = "shell"
+path = "https://github.com/tinted-theming/tinted-shell"
+themes-dir = "scripts"
+hook = "for t in /dev/pts/*; do source %f > $t; done"
+
+[[items]]
+name = "xmonad"
+path = "~/.config/tinted-theming/tinty/templates/xmonad/"
+themes-dir = "build"
+hook = "cp %f ~/.config/xmonad/Colors.hs && xmonad --recompile && xmonad --restart"
+
+[[items]]
+name = "polybar"
+path = "https://github.com/tinted-theming/base16-polybar"
+themes-dir = "colors"
+hook = "cp %f ~/.config/polybar/colors.ini && polybar-msg cmd restart"
+
+[[items]]
+path = "https://github.com/tinted-theming/base16-qutebrowser"
+name = "base16-qutebrowser"
+themes-dir = "themes/default" # Or "themes/minimal"
+hook = "cp -f %f ~/.config/qutebrowser/colors.py"
+theme-file-extension = ".config.py"

@@ -1,0 +1,3 @@
+default:
+  extension: .palette
+  output: build
