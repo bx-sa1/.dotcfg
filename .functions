@@ -42,3 +42,14 @@ function sounddesign {
     date=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
     emacs --eval "(progn (find-file \"~/Music/prod/SUPERCOLLIDER/sclang/$date$tag.scd\") (sclang-start))"
 }
+
+# see http://emacs-fu.blogspot.com.au/2011/12/system-administration-with-emacs.html
+# edit file with root privs
+function sudoemacs() {
+    filename=$1
+    without_beg_slash="${0##/}"
+    if [[ $without_beg_slash == $1 ]];then
+        filename="${PWD%//}/$1"
+    fi
+    emacsclient -c -a emacs "/sudo:root@localhost:$filename"
+}

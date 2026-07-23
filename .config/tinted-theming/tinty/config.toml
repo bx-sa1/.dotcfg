@@ -1,5 +1,7 @@
 shell = "sh -c '{}'"
 
+hooks = ["polybar-msg cmd restart"]
+
 [[items]]
 name = "xresources"
 path = "https://github.com/tinted-theming/tinted-xresources"
@@ -20,6 +22,7 @@ themes-dir = "colors"
 path = "https://github.com/tinted-theming/base16-emacs"
 name = "emacs"
 themes-dir = "build"
+theme-file-extension = "-theme.el"
 
 [[items]]
 path = "https://github.com/tinted-theming/base16-rofi"
@@ -37,13 +40,7 @@ hook = "for t in /dev/pts/*; do source %f > $t; done"
 name = "xmonad"
 path = "~/.config/tinted-theming/tinty/templates/xmonad/"
 themes-dir = "build"
-hook = "cp %f ~/.config/xmonad/Colors.hs && xmonad --recompile && xmonad --restart"
-
-[[items]]
-name = "polybar"
-path = "https://github.com/tinted-theming/base16-polybar"
-themes-dir = "colors"
-hook = "cp %f ~/.config/polybar/colors.ini && polybar-msg cmd restart"
+hook = "cp -f %f ~/.config/xmonad/Colors.hs && xmonad --recompile && xmonad --restart"
 
 [[items]]
 path = "https://github.com/tinted-theming/base16-qutebrowser"

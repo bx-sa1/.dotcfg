@@ -7,7 +7,8 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 	unset f
 fi
 
-[ -f ~/.Xresources ] && xrdb -merge -I"$HOME ~/.Xresources"
+[ -f ~/.Xresources ] && xrdb -merge -I"$HOME" "$HOME/.Xresources"
+[ -f "$(tinty config --data-dir-path)/xresources-xresources-file.Xresources" ] && xrdb -merge "$(tinty config --data-dir-path)/xresources-xresources-file.Xresources"
 
 export XSESSION_PID="$$"
 

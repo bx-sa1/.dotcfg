@@ -2,7 +2,7 @@
 # bspwm hotkeys
 #
 
-super + Enter
+super + Return
 	xdg-terminal-exec
 
 # quit/restart bspwm

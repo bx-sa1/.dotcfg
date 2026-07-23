@@ -3,14 +3,14 @@
 function enc_scheme_name {
     bg="$1"
     mode="$2"
-    echo "$bg\\_$mode" | base64
+    echo "$bg:$mode" | base64 -w 0
 }
 export -f enc_scheme_name
 
 function dec_scheme_name {
     b64_bg="$1"
-    dec="$(echo "$b64_bg" | base64 -d)"
-    readarray -d "\\_" -t res <<<"$dec"
+    dec="$(echo "$b64_bg" | base64 -d -w 0)"
+    readarray -d ":" -t res <<<"$dec"
     echo "${res[@]:0:2}"
 }
 export -f dec_scheme_name
@@ -65,7 +65,7 @@ function pick {
 
 function reset {
     curr_wp="$(flavours current | xargs -I {} bash -c 'dec_scheme_name "$@"' _ {})"
-    set "$curr_wp"
+    set $curr_wp
 }
 
 case $1 in

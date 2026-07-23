@@ -1,2 +1,2 @@
 #!/usr/bin/bash
-find "$HOME/.local/share/wallpapers/" | fzf --preview 'chafa -s "$FZF_PREVIEW_COLUMNSx$FZF_PREVIEW_LINES" {}'
+find "$HOME/.local/share/wallpapers/" -type f -name "*" -printf "%T+\t%p\n" | sort | cut -f2 | fzf --preview 'chafa -s "$FZF_PREVIEW_COLUMNSx$FZF_PREVIEW_LINES" {}'
