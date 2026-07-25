@@ -1,0 +1,1 @@
+sh "$(tinty config --data-dir-path)/shell-scripts-file.sh"
