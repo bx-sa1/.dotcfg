@@ -1,0 +1,30 @@
+--Place this file in your .xmonad/lib directory and import module Colors into .xmonad/xmonad.hs config
+--The easy way is to create a soft link from this file to the file in .xmonad/lib using ln -s
+--Then recompile and restart xmonad.
+
+module Colors
+    ( scheme, author
+    , base00, base01, base02, base03, base04, base05, base06, base07
+    , base08, base09, base0A, base0B, base0C, base0D, base0E, base0F
+    ) where
+
+scheme="Chalk"
+author="Chris Kempson (http://chriskempson.com)"
+-- Colors
+base00="#151515"
+base01="#202020"
+base02="#303030"
+base03="#505050"
+base04="#b0b0b0"
+base05="#d0d0d0"
+base06="#e0e0e0"
+base07="#f5f5f5"
+base08="#fb9fb1"
+base09="#eda987"
+base0A="#ddb26f"
+base0B="#acc267"
+base0C="#12cfc0"
+base0D="#6fc2ef"
+base0E="#e1a3ee"
+base0F="#deaf8f"
+

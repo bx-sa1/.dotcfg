@@ -1,0 +1,30 @@
+--Place this file in your .xmonad/lib directory and import module Colors into .xmonad/xmonad.hs config
+--The easy way is to create a soft link from this file to the file in .xmonad/lib using ln -s
+--Then recompile and restart xmonad.
+
+module Colors
+    ( scheme, author
+    , base00, base01, base02, base03, base04, base05, base06, base07
+    , base08, base09, base0A, base0B, base0C, base0D, base0E, base0F
+    ) where
+
+scheme="Shades of Purple"
+author="Iolar Demartini Junior (http://github.com/demartini), based on Shades of Purple Theme (https://github.com/ahmadawais/shades-of-purple-vscode)"
+-- Colors
+base00="#1e1e3f"
+base01="#43d426"
+base02="#f1d000"
+base03="#808080"
+base04="#6871ff"
+base05="#c7c7c7"
+base06="#ff77ff"
+base07="#ffffff"
+base08="#d90429"
+base09="#f92a1c"
+base0A="#ffe700"
+base0B="#3ad900"
+base0C="#00c5c7"
+base0D="#6943ff"
+base0E="#ff2c70"
+base0F="#79e8fb"
+

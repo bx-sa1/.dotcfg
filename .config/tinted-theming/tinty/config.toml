@@ -12,6 +12,7 @@ hook = "xrdb -merge -quiet %f"
 name = "json"
 path = "~/.config/tinted-theming/tinty/templates/json"
 themes-dir = "build"
+allow-dirty-update = true
 
 [[items]]
 path = "https://github.com/tinted-theming/tinted-vim"
